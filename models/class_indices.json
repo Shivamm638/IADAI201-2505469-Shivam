@@ -1,0 +1,12 @@
+{
+  "class_names": [
+    "empty",
+    "occupied"
+  ],
+  "positive_class": "occupied",
+  "note": "sigmoid output is P(occupied); label 0 = empty, label 1 = occupied",
+  "image_size": [
+    224,
+    224
+  ]
+}

@@ -1,0 +1,36 @@
+# ---------------------------------------------------------------------------
+# ParkVision AI
+#
+# The processed dataset, the trained model and the demo scenes ARE committed:
+# the assignment asks for the dataset and a runnable app, and Streamlit Cloud
+# needs the model at deploy time.
+#
+# What is excluded is the 267 MB PKLot annotation blob and the full-resolution
+# source photographs, which scripts/01_build_dataset.py re-downloads on demand.
+# ---------------------------------------------------------------------------
+
+data/raw/samples.json
+data/raw/images/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.ipynb_checkpoints/
+
+# Tooling / OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs and scratch output
+*.log
+results/_check_*.png
+
+# Local editor/tooling config
+.claude/

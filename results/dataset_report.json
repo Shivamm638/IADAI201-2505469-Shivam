@@ -1,0 +1,48 @@
+{
+  "source_dataset": "PKLot (Almeida et al., 2015), Voxel51 mirror on Hugging Face",
+  "photographs_indexed": 12142,
+  "candidate_scenes": 274,
+  "scenes_downloaded": 274,
+  "lots": {
+    "pucpr": 86,
+    "ufpr04": 88,
+    "ufpr05": 100
+  },
+  "weather": {
+    "sunny": 137,
+    "cloudy": 83,
+    "rainy": 54
+  },
+  "day_groups_per_split": {
+    "train": 69,
+    "val": 15,
+    "test": 14
+  },
+  "crops_per_split": {
+    "train": {
+      "empty": 2100,
+      "occupied": 2100
+    },
+    "val": {
+      "empty": 450,
+      "occupied": 450
+    },
+    "test": {
+      "empty": 450,
+      "occupied": 450
+    }
+  },
+  "total_crops": 6000,
+  "demo_scenes": 12,
+  "image_size": [
+    224,
+    224
+  ],
+  "split_ratios": {
+    "train": 0.7,
+    "val": 0.15,
+    "test": 0.15
+  },
+  "split_strategy": "grouped by (lot, date) so no calendar day appears in two splits",
+  "build_seconds": 54.2
+}

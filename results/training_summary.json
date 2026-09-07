@@ -1,0 +1,18 @@
+{
+  "backbone": "MobileNetV2 (ImageNet weights)",
+  "epochs_head": 12,
+  "epochs_finetune": 10,
+  "epochs_run": 22,
+  "batch_size": 32,
+  "lr_head": 0.001,
+  "lr_finetune": 1e-05,
+  "fine_tune_from_layer": 100,
+  "dropout": 0.3,
+  "label_smoothing": 0.02,
+  "total_parameters": 2259265,
+  "best_val_accuracy": 0.9977777600288391,
+  "best_val_auc": 0.9998494386672974,
+  "best_val_loss": 0.07171131670475006,
+  "training_minutes": 69.29,
+  "seed": 42
+}

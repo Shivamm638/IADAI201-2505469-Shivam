@@ -1,0 +1,11 @@
+ParkVision AI — test split classification report
+decision threshold on P(occupied): 0.50
+
+              precision    recall  f1-score   support
+
+       Empty     1.0000    0.9978    0.9989       450
+    Occupied     0.9978    1.0000    0.9989       450
+
+    accuracy                         0.9989       900
+   macro avg     0.9989    0.9989    0.9989       900
+weighted avg     0.9989    0.9989    0.9989       900
