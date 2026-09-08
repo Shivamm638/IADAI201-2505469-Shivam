@@ -75,11 +75,13 @@ and can break an app that has not been touched in months.
 
 ### 1 — Push to GitHub
 
+This folder is **already a git repository with the project committed**, so
+there is nothing to initialise. Create an empty repository on GitHub — no
+README, no .gitignore, no licence, or the first push will be rejected as
+diverged — then attach it and push:
+
 ```bash
 cd "SA 1 Output"
-git init
-git add .
-git commit -m "ParkVision AI: slot-level parking occupancy detection"
 git branch -M main
 git remote add origin https://github.com/<username>/IADAI201-<student-id>-<name>.git
 git push -u origin main
@@ -87,6 +89,11 @@ git push -u origin main
 
 Repository name follows the format the brief specifies:
 `IADAI201(Student_id)-studentname`.
+
+The push moves roughly 112 MB — the 6,000 dataset crops and the 24 MB model —
+so expect it to take a few minutes. If it is rejected for a file over 100 MB,
+something outside `.gitignore` has crept in; `git ls-files -s | sort -k4` will
+show the largest tracked paths.
 
 ### 2 — Grant assessor access
 
