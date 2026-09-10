@@ -21,32 +21,49 @@ answer in three seconds, without knowing what a sigmoid is?**
 │  🅿️ ParkVision AI                                    (gradient hero)  │
 │  Intelligent Urban Parking Analytics & Space Optimisation Platform   │
 ├────────────┬─────────────────────────────────────────────────────────┤
-│ SIDEBAR    │  1 · Choose a parking-lot image                         │
-│            │     [ 📁 Demo scenes ]  [ ⬆️ Upload your own ]           │
-│ Model      │                                                         │
-│  status    │  2 · Slot-level detection                               │
-│  accuracy  │     ┌───────────────┬───────────────┐                   │
-│            │     │   original    │   annotated   │  ← side by side   │
-│ Detection  │     └───────────────┴───────────────┘                   │
-│  threshold │     [ ⬇️ Download annotated image ]                      │
+│ SIDEBAR    │  [ 🔍 Analyse a lot ]  [ ⚖️ Compare two moments ]        │
 │            │                                                         │
-│ Overlay    │  3 · Real-time availability                             │
-│  bay no.   │     ┌──────┬──────────┬───────────┬────────────┐        │
-│  confidence│     │Total │ Occupied │ Available │ Congestion │        │
-│  amber flag│     │ 100  │    77    │    23     │    High    │        │
-│  legend    │     └──────┴──────────┴───────────┴────────────┘        │
-│            │     ╔═══════════════════════════════════════════╗       │
-│ Colour key │     ║ 🔴 High congestion — Heavy congestion      ║       │
-│ Bands      │     ║ Recommendation: try another area          ║       │
-│            │     ╚═══════════════════════════════════════════╝       │
+│ Model      │  1 · Pick a parking lot                                 │
+│  status    │     [ 📷 PUCPR ][ 📷 UFPR04 ][ 📷 UFPR05 ]               │
+│  accuracy  │     ┌──────┬──────┬──────┬──────┐                       │
+│            │     │ thumb│ thumb│ thumb│ thumb│  ← "Packed · cloudy    │
+│ Detection  │     └──────┴──────┴──────┴──────┘     morning"           │
+│  threshold │                                                         │
+│            │  2 · The verdict            ← the answer, first          │
+│ Overlay    │     ╔═════════════╤═══════════════════════════╗         │
+│  bay no.   │     ║      5      │ 🔴 High congestion         ║         │
+│  confidence│     ║  BAYS FREE  │ Parking almost full —      ║         │
+│  amber flag│     ║ of 100 · 95%│ try another area.          ║         │
+│  legend    │     ║             │ Head for Zone 3 — far end. ║         │
+│            │     ╚═════════════╧═══════════════════════════╝         │
+│ Colour key │                                                         │
+│ Bands      │  3 · What the camera saw                                │
+│            │     [🎯 Annotated][🖼️ Original][🔀 Side by side]         │
+│            │     ┌───────────────────────────────────────┐           │
+│            │     │        annotated, full width          │           │
+│            │     └───────────────────────────────────────┘           │
 │            │                                                         │
-│            │  4 · Parking utilisation analytics                      │
-│            │     [Where to park][Confidence][Bay-by-bay][Accuracy]   │
+│            │  4 · Availability in detail                             │
+│            │     ┌──────┬──────────┬───────────┬────────────┐        │
+│            │     │Total │ Occupied │ Available │ Congestion │        │
+│            │     └──────┴──────────┴───────────┴────────────┘        │
+│            │     ╔═══ colour-coded congestion banner ═══════╗        │
+│            │                                                         │
+│            │  5 · Explore the analysis                               │
+│            │  [Where to park][🔬 See what the AI sees]                │
+│            │  [Confidence][Bay-by-bay][Accuracy on this scene]       │
 └────────────┴─────────────────────────────────────────────────────────┘
 ```
 
-The four numbered sections mirror how a person actually reasons: *what am I
-looking at → what did the system see → what does it mean → tell me more*.
+**The verdict comes before the evidence.** An earlier draft opened with the two
+images and put the counts underneath. That is backwards for the actual user: a
+driver wants one number and one instruction, and everything else on the page
+exists to justify those two things. The images, the metric cards and the
+per-bay table are all still there — they just no longer stand between the
+reader and the answer.
+
+The five sections follow how a person reasons: *which lot → what should I do →
+what did the system see → what are the numbers → let me dig in*.
 
 ---
 
@@ -55,16 +72,20 @@ looking at → what did the system see → what does it mean → tell me more*.
 | Requirement | Implementation |
 |---|---|
 | Users can upload parking images | `st.file_uploader` accepting JPG/PNG, 15 MB cap |
-| Display uploaded image | Shown side by side with the annotated output |
+| Display uploaded image | Tabbed against the annotated output, or shown side by side |
 | Annotated output with clear colour coding | Green empty · red occupied · amber low-confidence, filled at 22% alpha with a legend stamped in |
-| Show total slots, available slots, occupancy % | Four large metric cards above the fold |
-| Clean, responsive, easy to use | Custom CSS cards, a colour-coded banner, and a wide two-column layout that reflows on narrow screens |
-| Non-technical audience | No raw probability appears in the primary view — the headline is a sentence, not a number |
+| Show total slots, available slots, occupancy % | The headline verdict, then four metric cards |
+| Clean, responsive, easy to use | Custom CSS cards, a colour-coded banner, and a flex layout that reflows on narrow screens |
+| Non-technical audience | The primary view carries no raw probability — the headline is a number and a sentence |
 
 ### Beyond the requirements
 
 | Feature | Why it was added |
 |---|---|
+| **Verdict card** | Answers "how many bays are free and should I drive in?" before any technical detail |
+| **Visual scene picker** | Thumbnails labelled *Packed · cloudy morning* rather than a dropdown of filenames — the variety of conditions is visible at a glance |
+| **🔬 See what the AI sees** | Shows the actual deskewed 224×224 crops the model classified, sorted by how much it hesitated. Turns the model from a black box into something inspectable |
+| **⚖️ Compare two moments** | The same camera at two times or in two weathers, side by side. The layout is fixed, so any difference in the counts is a real change in the lot |
 | **Demo scenes with ground truth** | A visitor with no parking photograph can still evaluate the system, and sees predictions checked against real labels |
 | **Zone guidance** | Answers "which way do I turn?", not just "how many are free?" |
 | **Adjustable threshold** | Lets an operator trade false "full" readings against false "free" readings, with the tuned default pre-selected |
@@ -72,7 +93,25 @@ looking at → what did the system see → what does it mean → tell me more*.
 | **Bay-by-bay table + CSV export** | Municipal operators need the underlying data, not only the picture |
 | **Annotated image download** | Lets a result be attached to a report or shared |
 | **Accuracy panel** | Overall test metrics plus per-weather and per-lot breakdowns, in the app rather than buried in a file |
-| **Latency display** | Shows the system is fast enough for live use |
+| **Latency display** | Shows the system is fast enough for live use, and reports the real measurement rather than a best case |
+
+---
+
+## 5.3.1 Theming without `prefers-color-scheme`
+
+The custom cards originally set explicit light backgrounds with a
+`@media (prefers-color-scheme: dark)` override. That is the standard pattern
+and it is wrong here: the media query follows the **operating system**, while
+Streamlit's theme is chosen independently. A user whose OS is dark but whose
+Streamlit renders light — a very common combination, and the one this project
+was developed on — got dark cards with dark text on a white page.
+
+Every custom surface is therefore built from `rgba(127,127,127,.07)` fills and
+`rgba(127,127,127,.26)` borders, with text left to `color: inherit` and muted
+text expressed as `opacity`. Grey at low alpha darkens a light background and
+lightens a dark one, so the same rules are correct under light, dark and
+custom themes without any detection at all. Fixed colours appear only where the
+app also owns the background — the hero, the congestion banner and the pills.
 
 ---
 

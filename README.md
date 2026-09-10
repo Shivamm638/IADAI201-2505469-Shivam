@@ -336,25 +336,35 @@ numbers from a grid that does not match the painted bays would be worse than say
 
 ### Screenshots
 
-**Slot-level detection** — the original photograph beside the annotated output, green for
-empty and red for occupied, with a legend stamped into the image.
+**The landing view** — what the system does, in three steps, with one-click ways in.
 
-![Slot-level detection](results/screenshots/app_01_detection.png)
+![Landing view](results/screenshots/app_00_landing.png)
 
-**Real-time availability** — counts, occupancy percentage and a colour-coded congestion
-banner carrying the recommendation in plain language.
+**The verdict** — the answer first. How many bays are free, whether to drive in,
+and which part of the lot to head for. Everything technical sits below it.
 
-![Real-time availability](results/screenshots/app_02_availability.png)
+![The verdict](results/screenshots/app_01_verdict.png)
 
-**Parking utilisation analytics** — zone guidance naming the part of the lot to drive to,
-with the per-zone free/occupied breakdown.
+**Availability in detail** — counts, occupancy percentage and a colour-coded
+congestion banner carrying the recommendation in plain language.
 
-![Utilisation analytics](results/screenshots/app_03_analytics.png)
+![Availability](results/screenshots/app_02_availability.png)
 
-**Checked against ground truth** — every demo scene carries PKLot's hand-drawn labels from
-a day the model never trained on, so the dashboard can show predicted against actual.
+**See what the AI sees** — the actual deskewed 224×224 crops the model
+classified, ordered by how much it hesitated. The model stops being a black box.
+
+![See what the AI sees](results/screenshots/app_03_see_what_ai_sees.png)
+
+**Checked against ground truth** — every demo scene carries PKLot's hand-drawn
+labels from a day the model never trained on, so the dashboard shows predicted
+against actual.
 
 ![Accuracy on an unseen scene](results/screenshots/app_04_ground_truth.png)
+
+**Compare two moments** — the same camera at two times. The bay layout is
+identical, so any change in the counts is a real change in the lot.
+
+![Compare two moments](results/screenshots/app_05_compare.png)
 
 Annotated model output for all twelve held-out scenes is in
 [`results/screenshots/`](results/screenshots/).
