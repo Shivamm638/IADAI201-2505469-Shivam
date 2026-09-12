@@ -14,6 +14,7 @@ Input is raw RGB in `[0, 255]`. Rescaling and augmentation are layers **inside**
 |---|---|
 | Backbone | MobileNetV2, ImageNet weights |
 | Parameters | 2,259,265 |
+| Augmentation | Flip, rotation, zoom, shift, contrast, brightness, and random-strength sensor noise — all inside the model graph, inactive at inference |
 | Schedule | 12 epochs head-only (lr 0.001), then 10 fine-tuning (lr 1e-05) |
 | Batch size | 32 |
 | Loss | Binary cross-entropy, label smoothing 0.02 |
@@ -26,15 +27,15 @@ On 900 bays from **calendar days that appear in no other split**:
 
 | Metric | Value |
 |---|---|
-| Accuracy | 99.89% |
-| Precision (occupied) | 99.78% |
+| Accuracy | 100.00% (95% CI 99.59–100.00%) |
+| Precision (occupied) | 100.00% |
 | Recall (occupied) | 100.00% |
 | ROC AUC | 1.0000 |
-| Operating threshold | 0.50 (chosen on validation, applied unchanged to test) |
+| Operating threshold | 0.55 (chosen on validation, applied unchanged to test) |
 
-**By weather:** cloudy 99.55% · rainy 100.00% · sunny 100.00%
+**By weather:** cloudy 100.00% · rainy 100.00% · sunny 100.00%
 
-**By lot:** PUCPR 100.00% · UFPR04 100.00% · UFPR05 99.71%
+**By lot:** PUCPR 100.00% · UFPR04 100.00% · UFPR05 100.00%
 
 ## Intended use
 
@@ -42,8 +43,9 @@ Educational and research use, on elevated fixed-camera views of surface parking 
 
 ## Out of scope
 
-- **Enforcement or billing.** The error rate is far too high to charge or fine anyone on.
-- **Night-time operation.** The weakest measured condition is *Sensor noise (σ=18)* at 96.33%. PKLot contains no true night imagery, so that figure is a simulation, not a measurement.
+- **Enforcement or billing.** A perfect score on a 900-bay test does not mean a zero error rate: the same measurement only bounds the true accuracy at 99.59% with 95% confidence, which still permits several wrong calls per thousand bays. Nobody should be charged or fined on that.
+- **Night-time operation.** PKLot contains no true night imagery. The dusk and night rows in the robustness report are simulated by dimming daytime frames, which is not the same as a real low-light sensor.
+- **Heavy sensor noise.** The weakest measured condition is *Sensor noise (σ=30)* at 98.78%; it is set outside the range the model trains on deliberately, as a generalisation check.
 - **Unsurveyed lots.** Without bay geometry the app falls back to an approximate grid, which it labels as indicative.
 - **Any safety-critical decision.**
 

@@ -11,12 +11,17 @@ The brief names MobileNet, EfficientNet and YOLO as candidates.
 this is a **classification** problem over surveyed bays, not a detection
 problem, which leaves the choice of backbone.
 
-| Backbone | Parameters | CPU inference | Fit for this task |
+| Backbone | Parameters | Compute per image | Fit for this task |
 |---|---|---|---|
-| **MobileNetV2** ✅ | 2.26 M | ~4 ms / bay | Depthwise-separable convolutions are designed for exactly this: small, low-resolution inputs on constrained hardware |
-| EfficientNetB0 | 5.3 M | ~11 ms / bay | Stronger on 1000-class ImageNet; that capacity is wasted on a 2-class problem and it is 2.3× slower |
-| ResNet50 | 25.6 M | ~45 ms / bay | 11× the parameters for a binary decision; a 100-bay lot would take ~4.5 s |
+| **MobileNetV2** ✅ | 2.26 M | ~0.3 GFLOPs | Depthwise-separable convolutions are designed for exactly this: small, low-resolution inputs on constrained hardware |
+| EfficientNetB0 | 5.3 M | ~0.4 GFLOPs | Stronger on 1000-class ImageNet; that capacity is wasted on a 2-class problem, and its depthwise and squeeze-excite layers run slower on CPU than the FLOP count suggests |
+| ResNet50 | 25.6 M | ~4.1 GFLOPs | 11× the parameters and ~13× the compute for a binary decision |
 | Training from scratch | — | — | 4,200 training crops is far too few to learn edges, texture and shape from nothing |
+
+Only MobileNetV2 was benchmarked end to end: **~10 ms per bay** on CPU, measured
+over the 695 bays of the twelve held-out scenes and including the perspective
+crop. The other rows compare published compute costs; they were not trained or
+timed here.
 
 **MobileNetV2 with ImageNet weights** was chosen because:
 
@@ -24,8 +29,8 @@ problem, which leaves the choice of backbone.
    present" from "empty tarmac" needs colour, texture and shape — features the
    early and middle ImageNet layers already encode well. The capacity of a
    larger backbone would mostly go unused.
-2. **A 100-bay lot must be analysed in one user-visible moment.** At ~4 ms per
-   bay, PUCPR's 100 bays classify in well under a second on CPU.
+2. **A 100-bay lot must be analysed in one user-visible moment.** At ~10 ms per
+   bay end to end, PUCPR's 100 bays take about a second on CPU.
 3. **Free-tier deployment is a hard constraint.** The saved model is **24 MB**
    (9 MB of weights plus the optimizer state that `--resume` needs)
    and runs on Streamlit Community Cloud's CPU container with no GPU.
@@ -202,6 +207,7 @@ parameters. Each change below was made in response to a measured problem:
 | 7b | Caching the decoded training split (630 MB) pushed a memory-constrained machine into paging — one epoch went from ~150 s to **over four hours** at near-zero CPU | Stream the training split; cache only the small validation and test splits; carry pixels as uint8 throughout | Epochs back to ~150 s; peak memory down roughly 1 GB |
 | 8 | Over-confident 0.00/1.00 outputs made the confidence display meaningless | Label smoothing 0.02 | Calibrated scores, so "low confidence" flags real uncertainty |
 | 9 | **UFPR04 scored 79.8% while the other two lots scored 99%+** | Fixed the corner-ordering bug described below, and added a flat-crop guard | See §3.5.1 |
+| 10 | **Under sigma=18 sensor noise the model called 29 empty bays occupied**, reading grain on bare tarmac as car texture | Added a random-strength sensor-noise layer to the in-graph augmentation | See §3.5.2 |
 
 ### 3.5.1 The bug the slice analysis caught
 
@@ -265,6 +271,88 @@ all 360° and asserts that (a) the ordering never reuses a corner, and (b) a
 textured bay never warps to a flat patch. Both fail against the old code.
 
 ---
+
+
+### 3.5.2 The weakness the stress test caught
+
+The same principle as §3.5.1, applied to the robustness suite rather than the
+slice breakdown: the average was fine, one row was not.
+
+Across twelve simulated field conditions the model lost at most four bays in
+900 — except one. Under **sigma=18 Gaussian noise it lost 33**, and the errors
+were lopsided: **29 of them were empty bays called occupied**. Inspecting the
+scores showed why a threshold tweak could not rescue it. The mistaken bays were
+not sitting near the boundary; many scored P(occupied) between 0.8 and 0.97.
+The model was confidently wrong. Grain on bare tarmac has the high-frequency
+texture of car bodywork, and nothing in training had ever told it otherwise:
+the augmentation covered flips, rotation, zoom, shift, contrast and brightness,
+but **no noise at all**.
+
+Two candidate fixes were measured before either was adopted.
+
+**Test-time augmentation, rejected.** Averaging the prediction over horizontal
+and vertical flips is the cheap, no-retraining option. Measured, it does not
+work here: noisy errors moved 32 -> 30 with two views and 32 -> **35** with
+four, for two to four times the inference cost. The reason is obvious in
+hindsight — flipping a noisy crop flips the noise with it, so the views are not
+independent and nothing averages out.
+
+**Noise augmentation, adopted.** `RandomSensorNoise` (in `src/model.py`) draws a
+standard deviation per image from `U(0, 25)` on the 0-255 scale and applies it
+to half of each batch. Keras's built-in `GaussianNoise` was not suitable: it
+applies one fixed strength to every image, so the model would never see a clean
+one. The layer sits last in the augmentation block, clips back into [0, 255],
+and is the identity at inference.
+
+The range is deliberately *not* tuned to the test. sigma=18 sits inside
+`U(0, 25)` but so does everything from a clean daylight sensor upward, and the
+stress suite gained a **sigma=30** row that lies outside the training range
+specifically to check that the robustness generalises instead of being
+memorised for one value.
+
+#### Result
+
+Retrained with one variable changed — same data, same split, same schedule,
+same seed:
+
+| Condition | Before | After | Errors / 900 |
+|---|---|---|---|
+| Clean test crops | 99.89% | **100.00%** | 1 -> 0 |
+| Sensor noise sigma=10 | 95.78% | **99.78%** | 38 -> 2 |
+| Sensor noise sigma=18 | 96.33% | **99.33%** | 33 -> 6 |
+| Sensor noise sigma=30 *(outside training range)* | 96.78% | **98.78%** | 29 -> 11 |
+| Harsh light (+50% contrast) | 99.67% | **100.00%** | 3 -> 0 |
+| Low bandwidth (JPEG q=25) | 99.67% | **99.78%** | 3 -> 2 |
+| Glare (+45% brightness) | 99.56% | 99.56% | 4 -> 4 |
+| **All 14 conditions** | | | **117 -> 26** |
+
+**No condition got worse.** Total errors across the whole suite fell by
+78%.
+
+One detail is worth more than the headline. The old model made *more* mistakes
+at mild noise (38 at sigma=10) than at heavy noise (29 at sigma=30) — its
+response was not even monotonic, which is what an untrained-for input
+distribution looks like. The new model degrades in order: 2, then 6, then 11.
+That ordering, more than any single number, is the evidence that it learned
+something general about grain rather than a trick for one setting.
+
+#### What did *not* change, and why that is honest
+
+The clean test went from 1 error to 0. **That is not a real improvement.** One
+bay in 900 is inside the noise of the measurement: the exact binomial interval
+for 1/900 is [99.38%, 100.00%] and for 0/900 it is [99.59%, 100.00%], which
+overlap almost entirely. The clean split was already at the ceiling and could
+not have shown a difference either way. The stress suite could, which is why
+the argument for this change rests there.
+
+The scene-level test is also unchanged: 11 of 12 photographs perfect, 12 of 12
+congestion levels correct, mean free-bay error 0.08. Both models miss the same
+single bay, and it is worth looking at — PKLot labels bay 77 of the PUCPR
+2012-10-09 scene **empty**, while a car is caught halfway into it. The model
+calls it occupied at P=0.94. For a driver being told where to park, the model's
+answer is the more useful one. It is counted as an error throughout this report
+regardless, because silently re-labelling ground truth to flatter a model is
+exactly the habit these checks exist to prevent.
 
 ## 3.6 Results
 

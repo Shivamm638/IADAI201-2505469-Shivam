@@ -11,8 +11,8 @@
   "label_smoothing": 0.02,
   "total_parameters": 2259265,
   "best_val_accuracy": 0.9977777600288391,
-  "best_val_auc": 0.9998494386672974,
-  "best_val_loss": 0.07171131670475006,
-  "training_minutes": 69.29,
+  "best_val_auc": 0.9999926090240479,
+  "best_val_loss": 0.0671529620885849,
+  "training_minutes": 30.39,
   "seed": 42
 }

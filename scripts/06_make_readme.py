@@ -38,6 +38,12 @@ def main() -> None:
     dataset = load(C.RESULTS_DIR / "dataset_report.json")
     training = load(C.RESULTS_DIR / "training_summary.json")
     robust = load(C.RESULTS_DIR / "robustness.json")
+    comparison = load(C.RESULTS_DIR / "model_comparison.json")
+
+    # Counted, not typed: the README said "38 tests" for three commits after the
+    # suite reached 46.
+    test_source = (C.PROJECT_ROOT / "tests" / "test_parkvision.py").read_text(encoding="utf-8")
+    n_tests = sum(1 for line in test_source.splitlines() if line.startswith("def test_"))
     details = load(C.PROJECT_ROOT / "submission" / "student_details.json")
 
     test = metrics.get("test", {})
@@ -86,6 +92,9 @@ def main() -> None:
             f"{len(scenes)} held-out photographs |"
         )
 
+    ci = test.get("accuracy_ci95")
+    ci_note = (f" · 95% CI {ci[0] * 100:.2f}–{ci[1] * 100:.2f}%" if ci else "")
+
     L: list[str] = []
     A = L.append
 
@@ -112,7 +121,7 @@ colour-coded overlays.
 
 | | |
 |---|---|
-| **Test accuracy** | **{pct(test.get('accuracy'))}** on {test.get('n_samples', 0):,} bays from days the model never saw |
+| **Test accuracy** | **{pct(test.get('accuracy'))}** on {test.get('n_samples', 0):,} bays from days the model never saw{ci_note} |
 | **ROC AUC** | {test.get('roc_auc', 0):.4f} |
 | **Dataset** | {dataset.get('total_crops', 0):,} labelled slot crops ({dataset.get('total_crops', 0) // 2:,} per class) from PKLot |
 | **Model** | MobileNetV2, {training.get('total_parameters', 0):,} parameters, {C.MODEL_PATH.stat().st_size / 1e6 if C.MODEL_PATH.exists() else 0:.1f} MB |
@@ -158,7 +167,7 @@ The decisive argument is what happens to an **empty** bay.
 | Answers "is bay 37 free?" | Directly | Only after matching boxes to bays |
 | Empty bays | Explicitly classified | Invisible — nothing to detect, so "empty" must be *inferred from absence* |
 | Model size | 2.3 M parameters, {C.MODEL_PATH.stat().st_size / 1e6 if C.MODEL_PATH.exists() else 9.2:.1f} MB | Tens of millions |
-| Free-tier CPU hosting | Yes, ~4 ms per bay | Slow, heavy dependencies |
+| Free-tier CPU hosting | Yes, {(1000 * sum(sc.get('seconds', 0) for sc in scenes) / max(1, sum(sc.get('total_slots', 0) for sc in scenes))):.0f} ms per bay end to end, measured | Slow, heavy dependencies |
 
 A detector finds *cars*; the question is about *bays*. An empty bay produces no detection,
 and absence is indistinguishable from a missed detection. Classifying each surveyed bay
@@ -514,11 +523,57 @@ measured, each condition is simulated across the whole test split.
         A("")
         A("![Robustness](results/robustness_chart.png)\n")
         if worst:
-            A(f"""Brightness and contrast changes are handled well — they were augmented during
-training. **{worst['condition']}** is the weakest condition at {pct(worst['accuracy'])}
-({worst['delta_vs_baseline']:+.4f} against a {pct(baseline)} baseline). Heavy blur is a limit
-of the *input*, not a tuning problem: a blurred empty bay and a blurred dark car genuinely
-share the same low-frequency signature.
+            A(f"""Lighting, camera angle and blur are all handled without loss — they are either
+augmented during training or simply do not destroy the cue the model relies on.
+**{worst['condition']}** is the weakest remaining condition at {pct(worst['accuracy'])}
+({worst['delta_vs_baseline']:+.4f} against a {pct(baseline)} baseline), and it is the one
+condition deliberately set *outside* the range the model trains on — it is there to test
+generalisation, not to be passed comfortably.
+""")
+
+    if comparison:
+        rows = {r["condition"]: r for r in comparison["stress_test"]}
+        tb = sum(r["baseline_errors"] for r in comparison["stress_test"])
+        tn = sum(r["new_errors"] for r in comparison["stress_test"])
+        noise_rows = [c for c in rows if c.startswith("Sensor noise")]
+        A(f"""### The stress test earned its keep too
+
+The first model passed every condition above except one. Under **sigma=18 sensor noise it
+lost 33 bays in 900**, and 29 of those were empty bays called *occupied* — grain on bare
+tarmac has the high-frequency texture of bodywork, and nothing in training had ever shown
+it noise. Many of the mistakes scored P(occupied) above 0.8, so they were not borderline
+calls a threshold could rescue.
+
+Test-time augmentation was tried first and **rejected on the measurement**: averaging over
+flipped views moved the errors 32 → 30 with two views and 32 → **35** with four, at two to
+four times the cost. Flipping a noisy crop flips its noise too, so the views are not
+independent.
+
+The fix was a random-strength noise layer in the augmentation block (sigma drawn per image
+from `U(0, 25)`, applied to half of each batch). Retrained with that one variable changed:
+
+| Condition | Before | After | Errors / {comparison['n_test_crops']} |
+|---|---|---|---|
+""" + chr(10).join(
+            f"| {c} | {rows[c]['baseline_accuracy']*100:.2f}% | **{rows[c]['new_accuracy']*100:.2f}%** "
+            f"| {rows[c]['baseline_errors']} → {rows[c]['new_errors']} |"
+            for c in ["Original test crops", *noise_rows,
+                      "Harsh light (+50% contrast)", "Low bandwidth (JPEG q=25)"]
+        ) + f"""
+| **All 14 conditions** | | | **{tb} → {tn}** |
+
+No condition got worse, and total errors across the suite fell by {100*(tb-tn)/tb:.0f}%. The
+sigma=30 row sits outside the training range on purpose: the point was to check the model
+learned something general about grain, not a trick for one setting. The clearest evidence
+that it did is the ordering — the old model was not even monotonic in noise strength
+(38 errors at sigma=10 but 29 at sigma=30), while the new one degrades in order: 2, 6, 11.
+
+**The clean split did not improve, and that is reported as such.** It went from 1 error to
+0, which is one bay in 900 and well inside the measurement's own uncertainty — the exact
+binomial intervals, [99.38%, 100%] and [99.59%, 100%], almost entirely overlap. The clean
+split was already at its ceiling; only the stress suite had the headroom to show a
+difference.
+
 """)
 
     A("""### Feedback, and what it changed
@@ -537,9 +592,11 @@ share the same low-frequency signature.
 python tests/test_parkvision.py
 ```
 
-38 tests covering geometry, congestion boundaries, aggregation, zone guidance, overlays,
-layout fallbacks, **and dataset integrity** — including an explicit check that no calendar
-day leaks across splits and that every demo scene comes from a test day.
+{n_tests} tests covering geometry, congestion boundaries, aggregation, zone guidance,
+overlays, layout fallbacks, the augmentation layer, **and dataset integrity** — including an
+explicit check that no calendar day leaks across splits, that every demo scene comes from a
+test day, and that every script loads the model through the one loader that registers the
+custom layer.
 
 📄 Full report: [`results/robustness_report.md`](results/robustness_report.md)
 """)
@@ -692,6 +749,8 @@ def write_model_card(metrics: dict, dataset: dict, training: dict, robust: dict)
         "|---|---|",
         "| Backbone | MobileNetV2, ImageNet weights |",
         f"| Parameters | {training.get('total_parameters', 0):,} |",
+        "| Augmentation | Flip, rotation, zoom, shift, contrast, brightness, and "
+        "random-strength sensor noise — all inside the model graph, inactive at inference |",
         f"| Schedule | {training.get('epochs_head', 0)} epochs head-only "
         f"(lr {training.get('lr_head', '')}), then "
         f"{training.get('epochs_finetune', 0)} fine-tuning "
@@ -710,7 +769,9 @@ def write_model_card(metrics: dict, dataset: dict, training: dict, robust: dict)
         "",
         "| Metric | Value |",
         "|---|---|",
-        f"| Accuracy | {pct(test.get('accuracy'))} |",
+        f"| Accuracy | {pct(test.get('accuracy'))}"
+        + (f" (95% CI {test['accuracy_ci95'][0] * 100:.2f}–{test['accuracy_ci95'][1] * 100:.2f}%)"
+           if test.get("accuracy_ci95") else "") + " |",
         f"| Precision (occupied) | {pct(test.get('precision_occupied'))} |",
         f"| Recall (occupied) | {pct(test.get('recall_occupied'))} |",
         f"| ROC AUC | {test.get('roc_auc', 0):.4f} |",
@@ -735,13 +796,17 @@ def write_model_card(metrics: dict, dataset: dict, training: dict, robust: dict)
         "",
         "## Out of scope",
         "",
-        "- **Enforcement or billing.** The error rate is far too high to charge or "
-        "fine anyone on.",
-        "- **Night-time operation.**"
-        + (f" The weakest measured condition is *{worst['condition']}* at "
-           f"{pct(worst['accuracy'])}." if worst else "")
-        + " PKLot contains no true night imagery, so that figure is a simulation, "
-        "not a measurement.",
+        "- **Enforcement or billing.** A perfect score on a 900-bay test does not "
+        "mean a zero error rate: the same measurement only bounds the true "
+        "accuracy at 99.59% with 95% confidence, which still permits several "
+        "wrong calls per thousand bays. Nobody should be charged or fined on that.",
+        "- **Night-time operation.** PKLot contains no true night imagery. The "
+        "dusk and night rows in the robustness report are simulated by dimming "
+        "daytime frames, which is not the same as a real low-light sensor.",
+        (f"- **Heavy sensor noise.** The weakest measured condition is "
+         f"*{worst['condition']}* at {pct(worst['accuracy'])}; it is set outside "
+         "the range the model trains on deliberately, as a generalisation check."
+         if worst else ""),
         "- **Unsurveyed lots.** Without bay geometry the app falls back to an "
         "approximate grid, which it labels as indicative.",
         "- **Any safety-critical decision.**",

@@ -1,31 +1,31 @@
 {
-  "threshold": 0.5,
+  "threshold": 0.55,
   "stress_test": [
     {
       "group": "Baseline",
       "condition": "Original test crops",
       "meaning": "the unmodified held-out split",
-      "accuracy": 0.9989,
+      "accuracy": 1.0,
       "delta_vs_baseline": 0.0,
-      "errors": 1,
+      "errors": 0,
       "n": 900
     },
     {
       "group": "Lighting",
       "condition": "Dusk (-45% brightness)",
       "meaning": "late evening, lot lights not yet on",
-      "accuracy": 0.9989,
+      "accuracy": 1.0,
       "delta_vs_baseline": 0.0,
-      "errors": 1,
+      "errors": 0,
       "n": 900
     },
     {
       "group": "Lighting",
       "condition": "Night (-70% brightness)",
       "meaning": "after dark, sodium lighting only",
-      "accuracy": 0.9978,
+      "accuracy": 0.9989,
       "delta_vs_baseline": -0.0011,
-      "errors": 2,
+      "errors": 1,
       "n": 900
     },
     {
@@ -33,7 +33,7 @@
       "condition": "Glare (+45% brightness)",
       "meaning": "low sun straight into the lens",
       "accuracy": 0.9956,
-      "delta_vs_baseline": -0.0033,
+      "delta_vs_baseline": -0.0044,
       "errors": 4,
       "n": 900
     },
@@ -42,7 +42,7 @@
       "condition": "Flat light (-40% contrast)",
       "meaning": "heavy overcast or fog",
       "accuracy": 1.0,
-      "delta_vs_baseline": 0.0011,
+      "delta_vs_baseline": 0.0,
       "errors": 0,
       "n": 900
     },
@@ -50,9 +50,9 @@
       "group": "Lighting",
       "condition": "Harsh light (+50% contrast)",
       "meaning": "midday sun, hard shadows",
-      "accuracy": 0.9967,
-      "delta_vs_baseline": -0.0022,
-      "errors": 3,
+      "accuracy": 1.0,
+      "delta_vs_baseline": 0.0,
+      "errors": 0,
       "n": 900
     },
     {
@@ -60,7 +60,7 @@
       "condition": "Camera knocked 8\u00b0",
       "meaning": "mounting bracket shifted",
       "accuracy": 1.0,
-      "delta_vs_baseline": 0.0011,
+      "delta_vs_baseline": 0.0,
       "errors": 0,
       "n": 900
     },
@@ -68,45 +68,63 @@
       "group": "Camera angle",
       "condition": "Camera knocked -12\u00b0",
       "meaning": "a worse knock, uncorrected",
-      "accuracy": 0.9989,
+      "accuracy": 1.0,
       "delta_vs_baseline": 0.0,
-      "errors": 1,
+      "errors": 0,
       "n": 900
     },
     {
       "group": "Image quality",
       "condition": "Motion blur (5px)",
       "meaning": "camera vibration in wind",
-      "accuracy": 0.9989,
+      "accuracy": 1.0,
       "delta_vs_baseline": 0.0,
-      "errors": 1,
+      "errors": 0,
       "n": 900
     },
     {
       "group": "Image quality",
       "condition": "Heavy blur (9px)",
       "meaning": "rain on the lens, out of focus",
-      "accuracy": 0.9989,
+      "accuracy": 1.0,
       "delta_vs_baseline": 0.0,
-      "errors": 1,
+      "errors": 0,
+      "n": 900
+    },
+    {
+      "group": "Image quality",
+      "condition": "Sensor noise (\u03c3=10)",
+      "meaning": "budget camera on a dull day",
+      "accuracy": 0.9978,
+      "delta_vs_baseline": -0.0022,
+      "errors": 2,
       "n": 900
     },
     {
       "group": "Image quality",
       "condition": "Sensor noise (\u03c3=18)",
       "meaning": "cheap camera at high ISO",
-      "accuracy": 0.9633,
-      "delta_vs_baseline": -0.0356,
-      "errors": 33,
+      "accuracy": 0.9933,
+      "delta_vs_baseline": -0.0067,
+      "errors": 6,
+      "n": 900
+    },
+    {
+      "group": "Image quality",
+      "condition": "Sensor noise (\u03c3=30)",
+      "meaning": "night, gain turned all the way up",
+      "accuracy": 0.9878,
+      "delta_vs_baseline": -0.0122,
+      "errors": 11,
       "n": 900
     },
     {
       "group": "Image quality",
       "condition": "Low bandwidth (JPEG q=25)",
       "meaning": "aggressive compression over 4G",
-      "accuracy": 0.9967,
+      "accuracy": 0.9978,
       "delta_vs_baseline": -0.0022,
-      "errors": 3,
+      "errors": 2,
       "n": 900
     }
   ],
@@ -130,7 +148,7 @@
       "true_congestion": "High",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.983,
+      "seconds": 0.968,
       "annotated_screenshot": "results/screenshots/scene_pucpr_cloudy_2012-09-12_09_08_18.png"
     },
     {
@@ -152,7 +170,7 @@
       "true_congestion": "Moderate",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.96,
+      "seconds": 0.931,
       "annotated_screenshot": "results/screenshots/scene_pucpr_sunny_2012-09-18_15_45_13.png"
     },
     {
@@ -196,7 +214,7 @@
       "true_congestion": "Moderate",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.957,
+      "seconds": 0.907,
       "annotated_screenshot": "results/screenshots/scene_pucpr_rainy_2012-10-11_13_26_46.png"
     },
     {
@@ -218,7 +236,7 @@
       "true_congestion": "High",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.289,
+      "seconds": 0.27,
       "annotated_screenshot": "results/screenshots/scene_ufpr04_sunny_2012-12-13_14_00_09.png"
     },
     {
@@ -240,7 +258,7 @@
       "true_congestion": "Low",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.301,
+      "seconds": 0.279,
       "annotated_screenshot": "results/screenshots/scene_ufpr04_rainy_2012-12-15_17_10_14.png"
     },
     {
@@ -262,7 +280,7 @@
       "true_congestion": "Low",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.408,
+      "seconds": 0.386,
       "annotated_screenshot": "results/screenshots/scene_ufpr05_cloudy_2013-03-02_06_05_00.png"
     },
     {
@@ -284,7 +302,7 @@
       "true_congestion": "High",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.386,
+      "seconds": 0.381,
       "annotated_screenshot": "results/screenshots/scene_ufpr05_sunny_2013-03-05_07_35_01.png"
     },
     {
@@ -306,7 +324,7 @@
       "true_congestion": "High",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.389,
+      "seconds": 0.378,
       "annotated_screenshot": "results/screenshots/scene_ufpr05_rainy_2013-03-05_15_35_11.png"
     },
     {
@@ -328,7 +346,7 @@
       "true_congestion": "Moderate",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.398,
+      "seconds": 0.384,
       "annotated_screenshot": "results/screenshots/scene_ufpr05_cloudy_2013-03-13_07_20_01.png"
     },
     {
@@ -350,7 +368,7 @@
       "true_congestion": "High",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.405,
+      "seconds": 0.38,
       "annotated_screenshot": "results/screenshots/scene_ufpr05_cloudy_2013-03-13_14_45_10.png"
     },
     {
@@ -372,7 +390,7 @@
       "true_congestion": "Low",
       "congestion_correct": true,
       "slot_accuracy": 1.0,
-      "seconds": 0.406,
+      "seconds": 0.375,
       "annotated_screenshot": "results/screenshots/scene_ufpr05_sunny_2013-04-16_06_50_01.png"
     }
   ]

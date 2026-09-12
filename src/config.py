@@ -93,6 +93,15 @@ AUG_ZOOM = 0.12
 AUG_TRANSLATION = 0.08
 AUG_CONTRAST = 0.25
 AUG_BRIGHTNESS = 0.25
+# Sensor noise. The first model had never seen a grainy image: under sigma=18
+# noise it called 29 empty bays occupied, reading grain on bare tarmac as car
+# texture. Half of all training images now get noise with a per-image strength
+# drawn uniformly from [0, 25] on the 0-255 scale. The range covers daylight
+# sensors (sigma ~2-5) through low-light high-ISO ones (~15-25); it is not
+# tuned to the sigma=18 stress test, which sits inside it, and sigma=30 is kept
+# outside it deliberately so the stress test can check generalisation.
+AUG_NOISE_MAX_STDDEV = 25.0
+AUG_NOISE_PROBABILITY = 0.5
 
 # Decision threshold on the sigmoid output. Re-tuned on the validation split by
 # scripts/03_evaluate.py and persisted into metrics.json.

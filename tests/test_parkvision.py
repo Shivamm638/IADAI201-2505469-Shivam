@@ -474,6 +474,74 @@ def test_model_beats_chance_on_a_held_out_scene():
 
 
 # ==========================================================================
+# Sensor-noise augmentation
+# ==========================================================================
+def _noise_batch(n: int = 64) -> np.ndarray:
+    return np.random.default_rng(0).uniform(0, 255, (n, 32, 32, 3)).astype("float32")
+
+
+def test_sensor_noise_is_the_identity_at_inference():
+    # Any leak into inference would add grain to every real prediction.
+    from src.model import RandomSensorNoise
+
+    layer = RandomSensorNoise(seed=1)
+    batch = _noise_batch()
+    for flag in (False, None):
+        assert np.array_equal(np.asarray(layer(batch, training=flag)), batch), \
+            f"noise applied with training={flag}"
+
+
+def test_sensor_noise_touches_part_of_the_batch_and_stays_in_range():
+    from src.model import RandomSensorNoise
+
+    layer = RandomSensorNoise(max_stddev=25.0, probability=0.5, seed=7)
+    batch = _noise_batch(256)
+    out = np.asarray(layer(batch, training=True))
+
+    noised = sum(not np.array_equal(out[i], batch[i]) for i in range(len(batch)))
+    # probability 0.5 over 256 images: anything outside 90-166 is a ~6-sigma event.
+    assert 90 <= noised <= 166, f"{noised}/256 images noised — expected about half"
+    assert out.min() >= 0.0 and out.max() <= 255.0, "noise pushed pixels out of [0, 255]"
+
+
+def test_scripts_load_the_model_through_the_shared_loader():
+    # The noise layer is a registered custom class, and registration happens
+    # when src.model is imported. A script that calls keras' load_model directly
+    # skips that import: 03_evaluate.py, 04_robustness_test.py and the notebook
+    # all did, and none of them could open the retrained model. 02_train.py is
+    # exempt because it builds the model, so src.model is always imported there.
+    offenders = []
+    candidates = [*sorted((C.PROJECT_ROOT / "scripts").glob("*.py")),
+                  C.PROJECT_ROOT / "app.py"]
+    for path in candidates:
+        if path.name == "02_train.py":
+            continue
+        for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
+            if "models.load_model(" in line:
+                offenders.append(f"{path.name}:{number}")
+    assert not offenders, (
+        "load through src.inference.load_model instead: " + ", ".join(offenders)
+    )
+
+
+def test_model_with_sensor_noise_round_trips_through_a_keras_file():
+    # The layer is custom; if registration breaks, the app cannot load the model.
+    import tempfile
+    import keras
+    from src.model import build_model
+
+    model = build_model(input_shape=(32, 32, 3))
+    path = Path(tempfile.mkdtemp()) / "noise_roundtrip.keras"
+    model.save(path)
+    reloaded = keras.models.load_model(path)
+
+    names = [layer.name for layer in reloaded.get_layer("augmentation").layers]
+    assert "aug_noise" in names, f"noise layer lost on reload: {names}"
+    probe = _noise_batch(4)
+    assert np.allclose(model.predict(probe, verbose=0), reloaded.predict(probe, verbose=0))
+
+
+# ==========================================================================
 # Runner
 # ==========================================================================
 _SKIPPED: list = []

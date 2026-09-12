@@ -199,6 +199,13 @@ def main() -> None:
     val_ds = DS.load_split("val", batch_size=args.batch_size)
 
     history = load_history() if args.resume else {}
+    if not args.resume:
+        # A fresh run starts a fresh record. The state file used to survive
+        # between runs, so a retrain inherited the previous model's minutes and
+        # phase boundary — it reported 99.7 minutes for a model that took 30.4,
+        # and a changed schedule would have put the fine-tuning marker on the
+        # training curves in the wrong place.
+        STATE_PATH.unlink(missing_ok=True)
     if args.resume:
         if not C.MODEL_PATH.exists():
             raise SystemExit(f"--resume needs a checkpoint at {C.MODEL_PATH}.")

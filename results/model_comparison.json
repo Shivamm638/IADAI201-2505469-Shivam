@@ -1,0 +1,130 @@
+{
+  "baseline": {
+    "commit": "b54d78e",
+    "augmentation": "flip, rotate, zoom, shift, contrast, brightness",
+    "threshold": 0.5,
+    "clean_test_accuracy": 0.9989,
+    "clean_test_errors": 1,
+    "roc_auc": 1.0,
+    "scenes": {
+      "perfect_scenes": 11,
+      "n_scenes": 12,
+      "mean_free_bay_error": 0.08333333333333333,
+      "congestion_correct": 12
+    }
+  },
+  "new": {
+    "augmentation": "as baseline + random sensor noise, sigma ~ U(0, 25) on half of images",
+    "threshold": 0.55,
+    "clean_test_accuracy": 1.0,
+    "clean_test_errors": 0,
+    "roc_auc": 1.0,
+    "scenes": {
+      "perfect_scenes": 11,
+      "n_scenes": 12,
+      "mean_free_bay_error": 0.08333333333333333,
+      "congestion_correct": 12
+    }
+  },
+  "n_test_crops": 900,
+  "stress_test": [
+    {
+      "condition": "Original test crops",
+      "baseline_accuracy": 0.9989,
+      "new_accuracy": 1.0,
+      "baseline_errors": 1,
+      "new_errors": 0
+    },
+    {
+      "condition": "Dusk (-45% brightness)",
+      "baseline_accuracy": 0.9989,
+      "new_accuracy": 1.0,
+      "baseline_errors": 1,
+      "new_errors": 0
+    },
+    {
+      "condition": "Night (-70% brightness)",
+      "baseline_accuracy": 0.9978,
+      "new_accuracy": 0.9989,
+      "baseline_errors": 2,
+      "new_errors": 1
+    },
+    {
+      "condition": "Glare (+45% brightness)",
+      "baseline_accuracy": 0.9956,
+      "new_accuracy": 0.9956,
+      "baseline_errors": 4,
+      "new_errors": 4
+    },
+    {
+      "condition": "Flat light (-40% contrast)",
+      "baseline_accuracy": 1.0,
+      "new_accuracy": 1.0,
+      "baseline_errors": 0,
+      "new_errors": 0
+    },
+    {
+      "condition": "Harsh light (+50% contrast)",
+      "baseline_accuracy": 0.9967,
+      "new_accuracy": 1.0,
+      "baseline_errors": 3,
+      "new_errors": 0
+    },
+    {
+      "condition": "Camera knocked 8\u00b0",
+      "baseline_accuracy": 1.0,
+      "new_accuracy": 1.0,
+      "baseline_errors": 0,
+      "new_errors": 0
+    },
+    {
+      "condition": "Camera knocked -12\u00b0",
+      "baseline_accuracy": 0.9989,
+      "new_accuracy": 1.0,
+      "baseline_errors": 1,
+      "new_errors": 0
+    },
+    {
+      "condition": "Motion blur (5px)",
+      "baseline_accuracy": 0.9989,
+      "new_accuracy": 1.0,
+      "baseline_errors": 1,
+      "new_errors": 0
+    },
+    {
+      "condition": "Heavy blur (9px)",
+      "baseline_accuracy": 0.9989,
+      "new_accuracy": 1.0,
+      "baseline_errors": 1,
+      "new_errors": 0
+    },
+    {
+      "condition": "Sensor noise (\u03c3=10)",
+      "baseline_accuracy": 0.9578,
+      "new_accuracy": 0.9978,
+      "baseline_errors": 38,
+      "new_errors": 2
+    },
+    {
+      "condition": "Sensor noise (\u03c3=18)",
+      "baseline_accuracy": 0.9633,
+      "new_accuracy": 0.9933,
+      "baseline_errors": 33,
+      "new_errors": 6
+    },
+    {
+      "condition": "Sensor noise (\u03c3=30)",
+      "baseline_accuracy": 0.9678,
+      "new_accuracy": 0.9878,
+      "baseline_errors": 29,
+      "new_errors": 11
+    },
+    {
+      "condition": "Low bandwidth (JPEG q=25)",
+      "baseline_accuracy": 0.9967,
+      "new_accuracy": 0.9978,
+      "baseline_errors": 3,
+      "new_errors": 2
+    }
+  ]
+}

@@ -302,9 +302,10 @@ is stabilised first.
     cells.append(code("""
 import os
 os.environ.setdefault("TF_CPP_MIN_LOG_LEVEL", "3")
-import tensorflow as tf
+from src import inference as INF
 
-model = tf.keras.models.load_model(C.MODEL_PATH)
+# The shared loader registers the custom noise layer before loading.
+model = INF.load_model(C.MODEL_PATH)
 model.summary()
 
 size_mb = C.MODEL_PATH.stat().st_size / 1e6

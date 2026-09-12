@@ -188,6 +188,23 @@ def load_manifest_lookup() -> dict:
     return {Path(r["file"]).name: r for r in records}
 
 
+def clopper_pearson(correct: int, n: int, level: float = 0.95) -> tuple:
+    """
+    Exact binomial confidence interval for an accuracy of ``correct`` / ``n``.
+
+    With errors in single digits, a bare accuracy overstates what the test set
+    can prove: 0 errors in 900 prints as 100.00%, but 900 samples cannot rule
+    out a true error rate of a few tenths of a percent. The usual normal
+    approximation is useless this close to 1 (its interval can exceed 100%), so
+    this uses the beta distribution directly.
+    """
+    from scipy.stats import beta
+    alpha = 1.0 - level
+    low = 0.0 if correct == 0 else float(beta.ppf(alpha / 2, correct, n - correct + 1))
+    high = 1.0 if correct == n else float(beta.ppf(1 - alpha / 2, correct + 1, n - correct))
+    return low, high
+
+
 def slice_metrics(files, y_true, y_pred, lookup, key: str) -> dict:
     """Accuracy broken down by a manifest field (weather, lot, ...)."""
     buckets = defaultdict(lambda: {"n": 0, "correct": 0, "occupied": 0})
@@ -241,14 +258,14 @@ def plot_slices(slices: dict, out_path: Path) -> None:
 # Main
 # --------------------------------------------------------------------------
 def main() -> None:
-    import tensorflow as tf
-
     C.ensure_dirs()
     if not C.MODEL_PATH.exists():
         raise SystemExit(f"No model at {C.MODEL_PATH}. Run scripts/02_train.py first.")
 
     print(f"loading {C.MODEL_PATH}")
-    model = tf.keras.models.load_model(C.MODEL_PATH)
+    # Through the shared loader, which registers the custom noise layer.
+    from src import inference as INF
+    model = INF.load_model(C.MODEL_PATH)
 
     print("scoring the validation split (threshold selection)")
     val_x, val_y, _ = DS.unbatched_arrays("val")
@@ -313,6 +330,9 @@ def main() -> None:
                 "true_occupied_pred_occupied": int(tp),
             },
             "errors": int(fp + fn),
+            "accuracy_ci95": [
+                round(v, 4) for v in clopper_pearson(int(tn + tp), int(len(test_y)))
+            ],
         },
         "validation": {
             "accuracy_at_default_threshold": round(

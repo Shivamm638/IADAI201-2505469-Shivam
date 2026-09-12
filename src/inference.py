@@ -42,6 +42,10 @@ def load_model(path: Path = C.MODEL_PATH, force_reload: bool = False):
     import tensorflow as tf  # imported lazily: keeps CLI tools that only need
                              # geometry free of a multi-second TF import
 
+    # Registers RandomSensorNoise. The saved graph refers to it by name, and
+    # Keras can only rebuild a custom layer whose class has been registered.
+    from . import model as _model  # noqa: F401
+
     _MODEL = tf.keras.models.load_model(path)
     _MODEL_PATH = path
     return _MODEL

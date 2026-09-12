@@ -46,111 +46,156 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Styling deliberately avoids `prefers-color-scheme`. That query follows the
-# operating system, but Streamlit's theme is set independently — so a user whose
-# OS is dark while the app renders light (a very common combination) would get
-# dark cards on a white page. Surfaces are therefore translucent grey and text
-# inherits its colour, which is correct under light, dark and custom themes
-# alike. Fixed colours appear only where this file also owns the background.
+# The theme itself (background, surfaces, borders, widget colours) lives in
+# .streamlit/config.toml, so native widgets pick it up consistently. This block
+# only styles the app's own cards.
+#
+# Surfaces are translucent slate and text inherits its colour rather than
+# being fixed. `prefers-color-scheme` is deliberately not used: it follows the
+# operating system, while Streamlit's theme is set independently, and keying
+# off it once rendered dark cards on a white page. Translucent surfaces stay
+# correct if a user switches the theme from Streamlit's settings menu.
+#
+# Status colours reach this CSS as custom properties set per element
+# (--pv-accent, --pv-tint, --pv-edge, --pv-glow); see `accent_vars`.
 CSS = """
 <style>
   .block-container { padding-top: 1.6rem; padding-bottom: 3rem; max-width: 1450px; }
 
   :root {
-      --pv-surface: rgba(127,127,127,.07);
-      --pv-line:    rgba(127,127,127,.26);
+      --pv-surface:   rgba(148,163,184,.06);
+      --pv-surface-2: rgba(148,163,184,.10);
+      --pv-line:      rgba(148,163,184,.20);
+  }
+
+  /* Every image — photographs, thumbnails, bay crops — gets the same frame. */
+  [data-testid="stImage"] img {
+      border-radius: 10px; border: 1px solid var(--pv-line);
   }
 
   /* ---------------------------------------------------------------- hero */
   .pv-hero {
-      background: linear-gradient(120deg, #0F2C4C 0%, #17457A 55%, #1E63A8 100%);
-      color: #fff; padding: 1.4rem 1.75rem; border-radius: 14px; margin-bottom: 1.1rem;
+      position: relative; overflow: hidden;
+      background:
+          radial-gradient(900px 260px at 88% -30%, rgba(96,165,250,.40), transparent 62%),
+          linear-gradient(118deg, #081A36 0%, #122F66 48%, #1D4ED8 100%);
+      border: 1px solid rgba(96,165,250,.30);
+      box-shadow: 0 18px 50px -24px rgba(59,130,246,.65);
+      color: #fff; padding: 1.45rem 1.8rem; border-radius: 16px; margin-bottom: 1.1rem;
   }
-  .pv-hero h1 { margin: 0 0 .3rem 0; font-size: 1.8rem; font-weight: 700; letter-spacing: -.02em; }
-  .pv-hero p  { margin: 0; opacity: .88; font-size: .95rem; }
+  .pv-hero h1 { margin: 0 0 .3rem 0; font-size: 1.85rem; font-weight: 800; letter-spacing: -.02em; color: #fff; }
+  .pv-hero p  { margin: 0; opacity: .86; font-size: .95rem; color: #fff; }
   .pv-hero .pv-tag {
-      display: inline-block; margin-top: .65rem; padding: .18rem .6rem; border-radius: 999px;
-      background: rgba(255,255,255,.16); font-size: .75rem; letter-spacing: .02em;
+      display: inline-block; margin-top: .7rem; padding: .2rem .65rem; border-radius: 999px;
+      background: rgba(255,255,255,.12); border: 1px solid rgba(255,255,255,.18);
+      font-size: .75rem; letter-spacing: .02em;
   }
+  .pv-live {
+      display: inline-block; width: .5rem; height: .5rem; border-radius: 50%;
+      background: #22C55E; box-shadow: 0 0 0 0 rgba(34,197,94,.7);
+      margin-right: .45rem; vertical-align: middle; animation: pv-pulse 2s infinite;
+  }
+  @keyframes pv-pulse {
+      0%   { box-shadow: 0 0 0 0 rgba(34,197,94,.65); }
+      70%  { box-shadow: 0 0 0 .5rem rgba(34,197,94,0); }
+      100% { box-shadow: 0 0 0 0 rgba(34,197,94,0); }
+  }
+  @media (prefers-reduced-motion: reduce) { .pv-live { animation: none; } }
 
   /* ------------------------------------------------------------- verdict */
   .pv-verdict {
-      display: flex; gap: 1.6rem; align-items: stretch; flex-wrap: wrap;
-      border: 1px solid var(--pv-line); border-left: 10px solid var(--pv-accent, #16A34A);
-      border-radius: 14px; background: var(--pv-surface);
-      padding: 1.3rem 1.5rem; margin: .2rem 0 1.1rem 0;
+      display: flex; gap: 1.7rem; align-items: stretch; flex-wrap: wrap;
+      background: linear-gradient(135deg, var(--pv-tint) 0%, var(--pv-surface) 58%);
+      border: 1px solid var(--pv-line); border-left: 8px solid var(--pv-accent);
+      border-radius: 16px; padding: 1.35rem 1.55rem; margin: .2rem 0 1.1rem 0;
+      box-shadow: 0 18px 50px -28px var(--pv-glow);
   }
   .pv-verdict-num { min-width: 190px; }
   .pv-big {
-      font-size: 4.4rem; line-height: .92; font-weight: 800; letter-spacing: -.04em;
-      color: var(--pv-accent, #16A34A);
+      font-size: 4.6rem; line-height: .9; font-weight: 800; letter-spacing: -.04em;
+      color: var(--pv-accent); text-shadow: 0 0 28px var(--pv-glow);
   }
   .pv-big-label {
       font-size: 1.0rem; font-weight: 700; text-transform: uppercase;
-      letter-spacing: .09em; color: inherit; margin-top: .3rem;
+      letter-spacing: .1em; color: inherit; margin-top: .35rem;
   }
-  .pv-big-sub { font-size: .84rem; opacity: .65; margin-top: .25rem; }
+  .pv-big-sub { font-size: .84rem; opacity: .62; margin-top: .25rem; }
   .pv-verdict-body { flex: 1 1 340px; }
-  .pv-verdict-body h3 { margin: .55rem 0 .3rem 0; font-size: 1.3rem; font-weight: 700; color: inherit; }
-  .pv-verdict-body p { margin: 0 0 .3rem 0; font-size: .95rem; opacity: .85; }
-  .pv-verdict-meta { font-size: .82rem !important; opacity: .62 !important; margin-top: .55rem !important; }
+  .pv-verdict-body h3 { margin: .6rem 0 .3rem 0; font-size: 1.32rem; font-weight: 700; color: inherit; }
+  .pv-verdict-body p { margin: 0 0 .3rem 0; font-size: .95rem; opacity: .86; }
+  .pv-verdict-meta { font-size: .82rem !important; opacity: .6 !important; margin-top: .6rem !important; }
+
   .pv-pill {
-      display: inline-block; padding: .22rem .75rem; border-radius: 999px;
-      color: #fff; font-size: .8rem; font-weight: 700; letter-spacing: .02em;
+      display: inline-block; padding: .22rem .78rem; border-radius: 999px;
+      background: var(--pv-tint); color: var(--pv-accent); border: 1px solid var(--pv-edge);
+      font-size: .8rem; font-weight: 700; letter-spacing: .02em;
   }
 
   /* -------------------------------------------------------------- metric */
   .pv-metric {
       background: var(--pv-surface); border: 1px solid var(--pv-line);
+      border-top: 3px solid var(--pv-accent, rgba(148,163,184,.35));
       border-radius: 12px; padding: .95rem 1.05rem; height: 100%;
   }
   .pv-metric .pv-label {
-      font-size: .73rem; text-transform: uppercase; letter-spacing: .07em;
-      opacity: .62; font-weight: 600; margin-bottom: .3rem;
+      font-size: .72rem; text-transform: uppercase; letter-spacing: .08em;
+      opacity: .6; font-weight: 700; margin-bottom: .3rem;
   }
-  .pv-metric .pv-value { font-size: 1.95rem; font-weight: 700; line-height: 1.05; color: inherit; }
-  .pv-metric .pv-sub   { font-size: .78rem; opacity: .62; margin-top: .25rem; }
+  .pv-metric .pv-value { font-size: 1.95rem; font-weight: 800; line-height: 1.05; color: var(--pv-accent, inherit); }
+  .pv-metric .pv-sub   { font-size: .78rem; opacity: .6; margin-top: .25rem; }
 
   /* -------------------------------------------------------------- banner */
-  .pv-banner { border-radius: 12px; padding: 1.05rem 1.25rem; color: #fff; margin: .3rem 0 1rem 0; }
-  .pv-banner h3 { margin: 0 0 .3rem 0; font-size: 1.18rem; font-weight: 700; color: #fff; }
-  .pv-banner p  { margin: 0; font-size: .93rem; opacity: .95; color: #fff; }
-  .pv-banner .pv-rec {
-      margin-top: .65rem; padding: .5rem .8rem; border-radius: 8px;
-      background: rgba(255,255,255,.18); font-weight: 600; font-size: .97rem;
+  .pv-banner {
+      background: linear-gradient(135deg, var(--pv-tint) 0%, rgba(148,163,184,.04) 70%);
+      border: 1px solid var(--pv-edge); border-radius: 14px;
+      padding: 1.05rem 1.3rem; margin: .3rem 0 1rem 0; color: inherit;
   }
-  .pv-bar { height: 12px; border-radius: 999px; overflow: hidden; margin-top: .5rem; }
-  .pv-bar > div { height: 100%; border-radius: 999px; }
+  .pv-banner h3 { margin: 0 0 .3rem 0; font-size: 1.18rem; font-weight: 700; color: var(--pv-accent); }
+  .pv-banner p  { margin: 0; font-size: .93rem; opacity: .86; }
+  .pv-banner .pv-rec {
+      margin-top: .7rem; padding: .55rem .85rem; border-radius: 8px;
+      background: var(--pv-surface-2); border-left: 3px solid var(--pv-accent);
+      font-weight: 600; font-size: .97rem;
+  }
+  .pv-bar {
+      height: 10px; border-radius: 999px; overflow: hidden; margin-top: .65rem;
+      background: rgba(148,163,184,.16);
+  }
+  .pv-bar > div {
+      height: 100%; border-radius: 999px; background: var(--pv-accent);
+      box-shadow: 0 0 14px var(--pv-glow);
+  }
 
   .pv-note {
-      background: rgba(224,168,0,.14); border-left: 4px solid #E0A800;
-      padding: .55rem .85rem; border-radius: 6px; font-size: .87rem;
-      margin-bottom: .4rem; color: inherit;
+      background: rgba(245,158,11,.10); border: 1px solid rgba(245,158,11,.28);
+      border-left: 4px solid #F59E0B; padding: .55rem .85rem; border-radius: 8px;
+      font-size: .87rem; margin-bottom: .4rem; color: inherit;
   }
 
   /* -------------------------------------------------------------- landing */
   .pv-land {
-      border: 1px solid var(--pv-line); border-radius: 14px;
-      background: var(--pv-surface); padding: 1.5rem 1.7rem; margin-bottom: 1rem;
+      background: linear-gradient(135deg, rgba(59,130,246,.10) 0%, var(--pv-surface) 55%);
+      border: 1px solid var(--pv-line); border-radius: 16px;
+      padding: 1.5rem 1.7rem; margin-bottom: 1rem;
   }
-  .pv-land h2 { margin: 0 0 .5rem 0; font-size: 1.35rem; font-weight: 700; color: inherit; }
+  .pv-land h2 { margin: 0 0 .5rem 0; font-size: 1.38rem; font-weight: 800; color: inherit; }
   .pv-land p  { margin: 0 0 .5rem 0; opacity: .8; font-size: .95rem; line-height: 1.6; }
-  .pv-flow { display: flex; gap: .5rem; flex-wrap: wrap; margin-top: .9rem; }
+  .pv-flow { display: flex; gap: .6rem; flex-wrap: wrap; margin-top: 1rem; }
   .pv-step {
       flex: 1 1 150px; background: var(--pv-surface); border: 1px solid var(--pv-line);
-      border-radius: 10px; padding: .7rem .85rem;
+      border-radius: 12px; padding: .75rem .9rem;
   }
-  .pv-step b { display: block; font-size: .85rem; color: inherit; margin-bottom: .15rem; }
-  .pv-step span { font-size: .8rem; opacity: .68; line-height: 1.45; }
+  .pv-step b { display: block; font-size: .86rem; color: #60A5FA; margin-bottom: .2rem; }
+  .pv-step span { font-size: .8rem; opacity: .7; line-height: 1.45; }
 
   /* ---------------------------------------------------------------- crop */
   .pv-crop-cap {
-      text-align: center; font-size: .78rem; opacity: .68;
-      margin-top: .2rem; line-height: 1.35;
+      text-align: center; font-size: .78rem; opacity: .72;
+      margin-top: .25rem; line-height: 1.35;
   }
   .pv-crop-cap b { display: block; font-size: .86rem; color: inherit; opacity: 1; }
 
-  .pv-foot { opacity: .62; font-size: .81rem; line-height: 1.6; }
+  .pv-foot { opacity: .58; font-size: .81rem; line-height: 1.6; }
 </style>
 """
 st.markdown(CSS, unsafe_allow_html=True)
@@ -191,6 +236,21 @@ def get_metrics():
     if not C.METRICS_PATH.exists():
         return {}
     return json.loads(C.METRICS_PATH.read_text(encoding="utf-8"))
+
+
+@st.cache_data
+def measured_ms_per_bay() -> float | None:
+    """
+    End-to-end latency (crop + classify) measured over the held-out scenes by
+    scripts/04_robustness_test.py. Read from the results rather than typed in,
+    so the landing page can never quote a speed the system has not achieved.
+    """
+    path = C.RESULTS_DIR / "robustness.json"
+    if not path.exists():
+        return None
+    scenes = json.loads(path.read_text(encoding="utf-8")).get("scene_test", [])
+    bays = sum(s.get("total_slots", 0) for s in scenes)
+    return 1000.0 * sum(s.get("seconds", 0.0) for s in scenes) / bays if bays else None
 
 
 @st.cache_data
@@ -244,6 +304,19 @@ def scene_detail(entry: dict) -> str:
             f"{entry['n_spaces']} bays")
 
 
+def ci_text(test: dict) -> str:
+    """
+    The 95% interval on test accuracy, e.g. '99.59–100.00%'.
+
+    Shown next to every accuracy figure: 0 errors in 900 prints as 100.00%, but
+    900 samples can only bound the true accuracy from below, not prove it.
+    """
+    ci = test.get("accuracy_ci95")
+    if not ci:
+        return ""
+    return f"{ci[0] * 100:.2f}–{ci[1] * 100:.2f}%"
+
+
 def confidence_sentence(insight: I.ParkingInsight, predictions) -> str:
     total = insight.total_slots
     decisive = int(sum(1 for p in predictions if p.confidence > 0.90))
@@ -254,11 +327,45 @@ def confidence_sentence(insight: I.ParkingInsight, predictions) -> str:
 
 
 # ==========================================================================
+# Colour
+#
+# The congestion colours in src/config.py are 600-weight shades, chosen as
+# solid fills behind white text. As *text* on this dark theme the red manages
+# only 3.96:1 (3.60:1 on a card), under the 4.5:1 WCAG AA minimum. Wherever a
+# status colour is the foreground, the app uses the brighter 500-weight shade
+# instead — red then reaches 5.08:1. Small labels use the 400 weight (6.9:1).
+# ==========================================================================
+ACCENT = {
+    "#16A34A": "#22C55E",   # green
+    "#D97706": "#F59E0B",   # amber
+    "#DC2626": "#EF4444",   # red
+    "#6B7280": "#9CA3AF",   # grey (no bays)
+}
+TEXT_EMPTY, TEXT_OCCUPIED = "#4ADE80", "#F87171"     # 400 weight, for small labels
+CHART_EMPTY, CHART_OCCUPIED = "#22C55E", "#EF4444"
+CHART_BLUE = "#60A5FA"
+
+
+def rgba(hex_colour: str, alpha: float) -> str:
+    h = hex_colour.lstrip("#")
+    r, g, b = (int(h[i:i + 2], 16) for i in (0, 2, 4))
+    return f"rgba({r},{g},{b},{alpha})"
+
+
+def accent_vars(colour: str) -> str:
+    """The four custom properties the CSS reads a status colour from."""
+    accent = ACCENT.get(colour.upper(), colour)
+    return (f"--pv-accent:{accent};--pv-tint:{rgba(accent, .14)};"
+            f"--pv-edge:{rgba(accent, .45)};--pv-glow:{rgba(accent, .55)};")
+
+
+# ==========================================================================
 # Render helpers
 # ==========================================================================
-def metric_card(label: str, value, sub: str = "") -> str:
+def metric_card(label: str, value, sub: str = "", colour: str | None = None) -> str:
+    style = f' style="{accent_vars(colour)}"' if colour else ""
     return (
-        f'<div class="pv-metric"><div class="pv-label">{label}</div>'
+        f'<div class="pv-metric"{style}><div class="pv-label">{label}</div>'
         f'<div class="pv-value">{value}</div>'
         f'<div class="pv-sub">{sub}</div></div>'
     )
@@ -274,7 +381,7 @@ def verdict_card(insight: I.ParkingInsight, predictions, timing: dict,
     """
     free = insight.available_slots
     return (
-        f'<div class="pv-verdict" style="--pv-accent:{insight.colour};">'
+        f'<div class="pv-verdict" style="{accent_vars(insight.colour)}">'
         f'  <div class="pv-verdict-num">'
         f'    <div class="pv-big">{free}</div>'
         f'    <div class="pv-big-label">{"bay free" if free == 1 else "bays free"}</div>'
@@ -282,7 +389,7 @@ def verdict_card(insight: I.ParkingInsight, predictions, timing: dict,
         f'{insight.occupancy_pct:.0f}% occupied</div>'
         f'  </div>'
         f'  <div class="pv-verdict-body">'
-        f'    <span class="pv-pill" style="background:{insight.colour};">'
+        f'    <span class="pv-pill">'
         f'{insight.emoji} {insight.congestion_level} congestion</span>'
         f'    <h3>{insight.recommendation}</h3>'
         f'    <p>{zone_line}</p>'
@@ -295,13 +402,13 @@ def verdict_card(insight: I.ParkingInsight, predictions, timing: dict,
 
 def congestion_banner(insight: I.ParkingInsight) -> str:
     return (
-        f'<div class="pv-banner" style="background:{insight.colour};">'
+        f'<div class="pv-banner" style="{accent_vars(insight.colour)}">'
         f'<h3>{insight.emoji} {insight.congestion_level} congestion — {insight.headline}</h3>'
         f'<p>{insight.detail}</p>'
         f'<div class="pv-rec">Recommendation: {insight.recommendation}</div>'
-        f'<div class="pv-bar" style="background:rgba(255,255,255,.28);">'
-        f'<div style="width:{min(100.0, insight.occupancy_pct):.1f}%;background:#fff;"></div></div>'
-        f'<p style="margin-top:.35rem;font-size:.82rem;">'
+        f'<div class="pv-bar">'
+        f'<div style="width:{min(100.0, insight.occupancy_pct):.1f}%;"></div></div>'
+        f'<p style="margin-top:.4rem;font-size:.82rem;opacity:.7;">'
         f'{insight.occupancy_pct:.1f}% of bays occupied</p>'
         f"</div>"
     )
@@ -349,8 +456,8 @@ st.markdown(
     "<h1>🅿️ ParkVision AI</h1>"
     "<p>Intelligent Urban Parking Analytics &amp; Space Optimisation Platform "
     "— UrbanFlow AI Pvt. Ltd.</p>"
-    '<span class="pv-tag">Slot-level occupancy detection · MobileNetV2 transfer learning · '
-    "Real-time availability insights</span>"
+    '<span class="pv-tag"><span class="pv-live"></span>Slot-level occupancy detection · '
+    "MobileNetV2 transfer learning · Real-time availability insights</span>"
     "</div>",
     unsafe_allow_html=True,
 )
@@ -370,7 +477,8 @@ with st.sidebar:
         st.success(
             f"**Model ready**\n\n"
             f"Test accuracy **{test.get('accuracy', 0) * 100:.2f}%**  \n"
-            f"ROC AUC **{test.get('roc_auc', 0):.4f}**  \n"
+            + (f"95% interval {ci_text(test)}  \n" if ci_text(test) else "")
+            + f"ROC AUC **{test.get('roc_auc', 0):.4f}**  \n"
             f"Errors: {test.get('errors', 0)} / {test.get('n_samples', 0)} bays"
         )
     else:
@@ -502,7 +610,7 @@ if mode == "⚖️ Compare two moments":
             m2.metric("Occupied", insight.occupied_slots)
             m3.metric("Occupancy", f"{insight.occupancy_pct:.0f}%")
             st.markdown(
-                f'<span class="pv-pill" style="background:{insight.colour};">'
+                f'<span class="pv-pill" style="{accent_vars(insight.colour)}">'
                 f'{insight.emoji} {insight.congestion_level}</span>',
                 unsafe_allow_html=True,
             )
@@ -538,7 +646,7 @@ if mode == "⚖️ Compare two moments":
             "Occupied": [ins_a.occupied_slots, ins_b.occupied_slots],
         }
     ).set_index("Moment")
-    st.bar_chart(trend, color=["#16A34A", "#DC2626"])
+    st.bar_chart(trend, color=[CHART_EMPTY, CHART_OCCUPIED])
     st.stop()
 
 # ==========================================================================
@@ -688,11 +796,19 @@ if image_rgb is None:
     )
 
     c1, c2, c3 = st.columns(3)
-    c1.markdown(metric_card("Accuracy", accuracy, "on days never trained on"),
+    c1.markdown(metric_card("Accuracy", accuracy,
+                            f"{test.get('errors', 0)} errors in {test.get('n_samples', 0)} "
+                            "unseen bays"
+                            + (f" · 95% CI {ci_text(test)}" if ci_text(test) else ""),
+                            colour=CHART_EMPTY),
                 unsafe_allow_html=True)
-    c2.markdown(metric_card("Demo lots", len(demo_index), "real held-out scenes"),
+    c2.markdown(metric_card("Demo lots", len(demo_index), "real held-out scenes",
+                            colour=CHART_BLUE),
                 unsafe_allow_html=True)
-    c3.markdown(metric_card("Speed", "~4 ms", "per bay, CPU only"),
+    speed = measured_ms_per_bay()
+    c3.markdown(metric_card("Speed", f"{speed:.0f} ms" if speed else "—",
+                            "per bay end to end, CPU only (measured)",
+                            colour=CHART_BLUE),
                 unsafe_allow_html=True)
 
     if demo_index:
@@ -783,16 +899,19 @@ st.download_button(
 st.subheader("4 · Availability in detail")
 
 c1, c2, c3, c4 = st.columns(4)
-c1.markdown(metric_card("Total slots", insight.total_slots, "bays in this lot"),
+c1.markdown(metric_card("Total slots", insight.total_slots, "bays in this lot",
+                        colour=CHART_BLUE),
             unsafe_allow_html=True)
 c2.markdown(metric_card("Occupied", insight.occupied_slots,
-                        f"{insight.occupancy_pct:.1f}% of the lot"),
+                        f"{insight.occupancy_pct:.1f}% of the lot",
+                        colour=CHART_OCCUPIED),
             unsafe_allow_html=True)
 c3.markdown(metric_card("Available", insight.available_slots,
-                        "ready to park in now"),
+                        "ready to park in now", colour=CHART_EMPTY),
             unsafe_allow_html=True)
 c4.markdown(metric_card("Congestion", insight.congestion_level,
-                        f"avg confidence {insight.mean_confidence * 100:.1f}%"),
+                        f"avg confidence {insight.mean_confidence * 100:.1f}%",
+                        colour=insight.colour),
             unsafe_allow_html=True)
 
 st.markdown(congestion_banner(insight), unsafe_allow_html=True)
@@ -828,7 +947,7 @@ with tab_zone:
         )
         st.dataframe(zone_df, width="stretch", hide_index=True)
         st.bar_chart(zone_df.set_index("Zone")[["Available", "Occupied"]],
-                     color=["#16A34A", "#DC2626"])
+                     color=[CHART_EMPTY, CHART_OCCUPIED])
     else:
         st.caption("Zone analysis needs bay geometry with at least three rows.")
 
@@ -883,7 +1002,7 @@ with tab_see:
                     continue
                 with column:
                     st.image(patches[position].astype(np.uint8), width="stretch")
-                    tint = "#DC2626" if prediction.status == "occupied" else "#16A34A"
+                    tint = TEXT_OCCUPIED if prediction.status == "occupied" else TEXT_EMPTY
                     flag = " · unsure" if prediction.uncertain else ""
                     st.markdown(
                         f'<div class="pv-crop-cap">'
@@ -972,7 +1091,11 @@ if metrics:
     with st.expander("📈 How the model performs overall (held-out test split)"):
         test = metrics["test"]
         m1, m2, m3, m4 = st.columns(4)
-        m1.metric("Accuracy", f"{test['accuracy'] * 100:.2f}%")
+        m1.metric("Accuracy", f"{test['accuracy'] * 100:.2f}%",
+                  help=("95% exact (Clopper–Pearson) interval: " + ci_text(test)
+                        + ". The test split has a fixed size, so a perfect score "
+                        "bounds the true accuracy from below rather than proving it.")
+                  if ci_text(test) else None)
         m2.metric("Precision (occupied)", f"{test['precision_occupied'] * 100:.2f}%")
         m3.metric("Recall (occupied)", f"{test['recall_occupied'] * 100:.2f}%")
         m4.metric("ROC AUC", f"{test['roc_auc']:.4f}")

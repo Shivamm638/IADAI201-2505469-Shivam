@@ -1,36 +1,40 @@
 {
-  "operating_threshold": 0.5,
+  "operating_threshold": 0.55,
   "test": {
-    "accuracy": 0.9989,
-    "balanced_accuracy": 0.9989,
-    "precision_occupied": 0.9978,
+    "accuracy": 1.0,
+    "balanced_accuracy": 1.0,
+    "precision_occupied": 1.0,
     "recall_occupied": 1.0,
-    "f1_occupied": 0.9989,
+    "f1_occupied": 1.0,
     "precision_empty": 1.0,
-    "recall_empty": 0.9978,
-    "f1_empty": 0.9989,
+    "recall_empty": 1.0,
+    "f1_empty": 1.0,
     "roc_auc": 1.0,
     "average_precision": 1.0,
-    "matthews_corrcoef": 0.9978,
+    "matthews_corrcoef": 1.0,
     "n_samples": 900,
     "confusion_matrix": {
-      "true_empty_pred_empty": 449,
-      "true_empty_pred_occupied": 1,
+      "true_empty_pred_empty": 450,
+      "true_empty_pred_occupied": 0,
       "true_occupied_pred_empty": 0,
       "true_occupied_pred_occupied": 450
     },
-    "errors": 1
+    "errors": 0,
+    "accuracy_ci95": [
+      0.9959,
+      1.0
+    ]
   },
   "validation": {
     "accuracy_at_default_threshold": 0.9978,
-    "accuracy_at_operating_threshold": 0.9978,
-    "roc_auc": 0.9999,
+    "accuracy_at_operating_threshold": 0.9989,
+    "roc_auc": 1.0,
     "n_samples": 900
   },
   "by_weather": {
     "cloudy": {
       "n": 222,
-      "accuracy": 0.9955,
+      "accuracy": 1.0,
       "share_occupied": 0.2838
     },
     "rainy": {
@@ -57,7 +61,7 @@
     },
     "ufpr05": {
       "n": 349,
-      "accuracy": 0.9971,
+      "accuracy": 1.0,
       "share_occupied": 0.6332
     }
   },

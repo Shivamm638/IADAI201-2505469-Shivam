@@ -114,8 +114,14 @@ def build_conditions():
          lambda x: add_blur(x, 5)),
         ("Image quality", "Heavy blur (9px)", "rain on the lens, out of focus",
          lambda x: add_blur(x, 9)),
+        ("Image quality", "Sensor noise (σ=10)", "budget camera on a dull day",
+         lambda x: add_noise(x, 10)),
         ("Image quality", "Sensor noise (σ=18)", "cheap camera at high ISO",
          lambda x: add_noise(x, 18)),
+        # Outside the U(0, 25) range the model trains on — this row is the check
+        # that noise robustness generalises rather than being learned for one σ.
+        ("Image quality", "Sensor noise (σ=30)", "night, gain turned all the way up",
+         lambda x: add_noise(x, 30)),
         ("Image quality", "Low bandwidth (JPEG q=25)", "aggressive compression over 4G",
          lambda x: jpeg_compress(x, 25)),
     ]
@@ -423,7 +429,7 @@ def main() -> None:
 
     threshold = INF.load_threshold()
     print(f"loading {C.MODEL_PATH} (threshold {threshold:.2f})")
-    model = tf.keras.models.load_model(C.MODEL_PATH)
+    model = INF.load_model(C.MODEL_PATH)   # registers the custom noise layer
 
     stress = run_stress_test(model, threshold)
     scenes = run_scene_test(model, threshold)

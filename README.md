@@ -20,12 +20,12 @@ colour-coded overlays.
 
 | | |
 |---|---|
-| **Test accuracy** | **99.89%** on 900 bays from days the model never saw |
+| **Test accuracy** | **100.00%** on 900 bays from days the model never saw · 95% CI 99.59–100.00% |
 | **ROC AUC** | 1.0000 |
 | **Dataset** | 6,000 labelled slot crops (3,000 per class) from PKLot |
 | **Model** | MobileNetV2, 2,259,265 parameters, 24.4 MB |
 | **Training** | 22 epochs, two-phase transfer learning |
-| **End-to-end latency** | 0.57 s for a whole lot, CPU only |
+| **End-to-end latency** | 0.55 s for a whole lot, CPU only |
 | **Free-bay counting error** | 0.08 bays per scene, averaged over 12 held-out photographs |
 
 ---
@@ -65,7 +65,7 @@ The decisive argument is what happens to an **empty** bay.
 | Answers "is bay 37 free?" | Directly | Only after matching boxes to bays |
 | Empty bays | Explicitly classified | Invisible — nothing to detect, so "empty" must be *inferred from absence* |
 | Model size | 2.3 M parameters, 24.4 MB | Tens of millions |
-| Free-tier CPU hosting | Yes, ~4 ms per bay | Slow, heavy dependencies |
+| Free-tier CPU hosting | Yes, 9 ms per bay end to end, measured | Slow, heavy dependencies |
 
 A detector finds *cars*; the question is about *bays*. An empty bay produces no detection,
 and absence is indistinguishable from a missed detection. Classifying each surveyed bay
@@ -163,7 +163,7 @@ crops is a well-known way to make fine-tuning unstable.
 | Early stopping | patience 6 on `val_accuracy` |
 | LR schedule | `ReduceLROnPlateau` ×0.5, patience 3 |
 | Seed | 42 |
-| Training time | 69 min, CPU only |
+| Training time | 30 min, CPU only |
 
 ![Training curves](results/training_curves.png)
 
@@ -175,27 +175,27 @@ crops is a well-known way to make fine-tuning unstable.
 
 The decision threshold is swept on the **validation** split and applied **unchanged** to
 test — tuning it on test and then reporting test accuracy would be reporting a number we
-had fitted. Chosen threshold: **0.50**.
+had fitted. Chosen threshold: **0.55**.
 
 | Metric | Test split |
 |---|---|
-| **Accuracy** | **99.89%** |
-| Balanced accuracy | 99.89% |
-| Precision (occupied) | 99.78% |
+| **Accuracy** | **100.00%** |
+| Balanced accuracy | 100.00% |
+| Precision (occupied) | 100.00% |
 | Recall (occupied) | 100.00% |
-| F1 (occupied) | 99.89% |
+| F1 (occupied) | 100.00% |
 | Precision (empty) | 100.00% |
-| Recall (empty) | 99.78% |
+| Recall (empty) | 100.00% |
 | ROC AUC | 1.0000 |
 | Average precision | 1.0000 |
-| Matthews correlation | 0.9978 |
-| Errors | 1 of 900 bays |
+| Matthews correlation | 1.0000 |
+| Errors | 0 of 900 bays |
 
 ### Confusion matrix
 
 | | Predicted **Empty** | Predicted **Occupied** |
 |---|---|---|
-| **Actual Empty** | 449 ✅ | 1 |
+| **Actual Empty** | 450 ✅ | 0 |
 | **Actual Occupied** | 0 | 450 ✅ |
 
 ![Confusion matrix](results/confusion_matrix.png)
@@ -212,7 +212,7 @@ records its provenance, accuracy can be broken down by slice.
 
 | Weather | Bays tested | Accuracy |
 |---|---|---|
-| Cloudy | 222 | 99.55% |
+| Cloudy | 222 | 100.00% |
 | Rainy | 157 | 100.00% |
 | Sunny | 521 | 100.00% |
 
@@ -220,7 +220,7 @@ records its provenance, accuracy can be broken down by slice.
 |---|---|---|
 | PUCPR | 323 | 100.00% |
 | UFPR04 | 228 | 100.00% |
-| UFPR05 | 349 | 99.71% |
+| UFPR05 | 349 | 100.00% |
 
 ![Accuracy by slice](results/accuracy_by_slice.png)
 
@@ -263,9 +263,9 @@ have found this; only the slice breakdown did.
 | | Before the fix | After the fix |
 |---|---|---|
 | Featureless crops in the dataset | 208 of 6,000 (3.5%) | **0** |
-| Test accuracy | 94.11% | **99.89%** |
+| Test accuracy | 94.11% | **100.00%** |
 | UFPR04 accuracy | 79.82% | **100.00%** |
-| Test errors | 53 of 900 | **1 of 900** |
+| Test errors | 53 of 900 | **0 of 900** |
 
 Full write-up: [`docs/03_model_development.md` §3.5.1](docs/03_model_development.md#351-the-bug-the-slice-analysis-caught)
 
@@ -387,7 +387,7 @@ bays did the app promise, and how many were really there.**
 | Mean slot-level accuracy across 12 held-out photographs | **99.92%** over 695 bays |
 | Mean error in the free-bay count | **0.08 bays** per scene |
 | Congestion level called correctly | **12 of 12** scenes |
-| Mean end-to-end latency | **0.57 s** per photograph, CPU only |
+| Mean end-to-end latency | **0.55 s** per photograph, CPU only |
 
 ### Stress testing — lighting, angle and image quality
 
@@ -397,26 +397,68 @@ measured, each condition is simulated across the whole test split.
 
 | Condition | Simulates | Accuracy | Change |
 |---|---|---|---|
-| Original test crops | the unmodified held-out split | 99.89% | — |
-| Dusk (-45% brightness) | late evening, lot lights not yet on | 99.89% | +0.0000 |
-| Night (-70% brightness) | after dark, sodium lighting only | 99.78% | -0.0011 |
-| Glare (+45% brightness) | low sun straight into the lens | 99.56% | -0.0033 |
-| Flat light (-40% contrast) | heavy overcast or fog | 100.00% | +0.0011 |
-| Harsh light (+50% contrast) | midday sun, hard shadows | 99.67% | -0.0022 |
-| Camera knocked 8° | mounting bracket shifted | 100.00% | +0.0011 |
-| Camera knocked -12° | a worse knock, uncorrected | 99.89% | +0.0000 |
-| Motion blur (5px) | camera vibration in wind | 99.89% | +0.0000 |
-| Heavy blur (9px) | rain on the lens, out of focus | 99.89% | +0.0000 |
-| Sensor noise (σ=18) | cheap camera at high ISO | 96.33% | -0.0356 |
-| Low bandwidth (JPEG q=25) | aggressive compression over 4G | 99.67% | -0.0022 |
+| Original test crops | the unmodified held-out split | 100.00% | — |
+| Dusk (-45% brightness) | late evening, lot lights not yet on | 100.00% | +0.0000 |
+| Night (-70% brightness) | after dark, sodium lighting only | 99.89% | -0.0011 |
+| Glare (+45% brightness) | low sun straight into the lens | 99.56% | -0.0044 |
+| Flat light (-40% contrast) | heavy overcast or fog | 100.00% | +0.0000 |
+| Harsh light (+50% contrast) | midday sun, hard shadows | 100.00% | +0.0000 |
+| Camera knocked 8° | mounting bracket shifted | 100.00% | +0.0000 |
+| Camera knocked -12° | a worse knock, uncorrected | 100.00% | +0.0000 |
+| Motion blur (5px) | camera vibration in wind | 100.00% | +0.0000 |
+| Heavy blur (9px) | rain on the lens, out of focus | 100.00% | +0.0000 |
+| Sensor noise (σ=10) | budget camera on a dull day | 99.78% | -0.0022 |
+| Sensor noise (σ=18) | cheap camera at high ISO | 99.33% | -0.0067 |
+| Sensor noise (σ=30) | night, gain turned all the way up | 98.78% | -0.0122 |
+| Low bandwidth (JPEG q=25) | aggressive compression over 4G | 99.78% | -0.0022 |
 
 ![Robustness](results/robustness_chart.png)
 
-Brightness and contrast changes are handled well — they were augmented during
-training. **Sensor noise (σ=18)** is the weakest condition at 96.33%
-(-0.0356 against a 99.89% baseline). Heavy blur is a limit
-of the *input*, not a tuning problem: a blurred empty bay and a blurred dark car genuinely
-share the same low-frequency signature.
+Lighting, camera angle and blur are all handled without loss — they are either
+augmented during training or simply do not destroy the cue the model relies on.
+**Sensor noise (σ=30)** is the weakest remaining condition at 98.78%
+(-0.0122 against a 100.00% baseline), and it is the one
+condition deliberately set *outside* the range the model trains on — it is there to test
+generalisation, not to be passed comfortably.
+
+### The stress test earned its keep too
+
+The first model passed every condition above except one. Under **sigma=18 sensor noise it
+lost 33 bays in 900**, and 29 of those were empty bays called *occupied* — grain on bare
+tarmac has the high-frequency texture of bodywork, and nothing in training had ever shown
+it noise. Many of the mistakes scored P(occupied) above 0.8, so they were not borderline
+calls a threshold could rescue.
+
+Test-time augmentation was tried first and **rejected on the measurement**: averaging over
+flipped views moved the errors 32 → 30 with two views and 32 → **35** with four, at two to
+four times the cost. Flipping a noisy crop flips its noise too, so the views are not
+independent.
+
+The fix was a random-strength noise layer in the augmentation block (sigma drawn per image
+from `U(0, 25)`, applied to half of each batch). Retrained with that one variable changed:
+
+| Condition | Before | After | Errors / 900 |
+|---|---|---|---|
+| Original test crops | 99.89% | **100.00%** | 1 → 0 |
+| Sensor noise (σ=10) | 95.78% | **99.78%** | 38 → 2 |
+| Sensor noise (σ=18) | 96.33% | **99.33%** | 33 → 6 |
+| Sensor noise (σ=30) | 96.78% | **98.78%** | 29 → 11 |
+| Harsh light (+50% contrast) | 99.67% | **100.00%** | 3 → 0 |
+| Low bandwidth (JPEG q=25) | 99.67% | **99.78%** | 3 → 2 |
+| **All 14 conditions** | | | **117 → 26** |
+
+No condition got worse, and total errors across the suite fell by 78%. The
+sigma=30 row sits outside the training range on purpose: the point was to check the model
+learned something general about grain, not a trick for one setting. The clearest evidence
+that it did is the ordering — the old model was not even monotonic in noise strength
+(38 errors at sigma=10 but 29 at sigma=30), while the new one degrades in order: 2, 6, 11.
+
+**The clean split did not improve, and that is reported as such.** It went from 1 error to
+0, which is one bay in 900 and well inside the measurement's own uncertainty — the exact
+binomial intervals, [99.38%, 100%] and [99.59%, 100%], almost entirely overlap. The clean
+split was already at its ceiling; only the stress suite had the headroom to show a
+difference.
+
 
 ### Feedback, and what it changed
 
@@ -434,9 +476,11 @@ share the same low-frequency signature.
 python tests/test_parkvision.py
 ```
 
-38 tests covering geometry, congestion boundaries, aggregation, zone guidance, overlays,
-layout fallbacks, **and dataset integrity** — including an explicit check that no calendar
-day leaks across splits and that every demo scene comes from a test day.
+{n_tests} tests covering geometry, congestion boundaries, aggregation, zone guidance,
+overlays, layout fallbacks, the augmentation layer, **and dataset integrity** — including an
+explicit check that no calendar day leaks across splits, that every demo scene comes from a
+test day, and that every script loads the model through the one loader that registers the
+custom layer.
 
 📄 Full report: [`results/robustness_report.md`](results/robustness_report.md)
 
@@ -487,7 +531,7 @@ pip install -r requirements-dev.txt
 
 # The trained model and dataset are committed, so this is optional:
 python scripts/01_build_dataset.py      # rebuild from PKLot        (~2 min cold)
-python scripts/02_train.py              # retrain                   (~69 min CPU)
+python scripts/02_train.py              # retrain                   (~30 min CPU)
 python scripts/03_evaluate.py           # metrics and figures       (~1 min)
 python scripts/04_robustness_test.py    # testing report            (~4 min)
 python tests/test_parkvision.py         # 38 tests

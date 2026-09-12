@@ -23,6 +23,7 @@ from __future__ import annotations
 
 from typing import Tuple
 
+import keras as k3
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers
@@ -30,14 +31,77 @@ from tensorflow.keras import layers
 from . import config as C
 
 
+# `tensorflow.keras` is a compatibility namespace here that does not expose
+# `saving`, `random` or `ops`; the real Keras 3 package does, and its layer
+# classes are the very same objects, so the two mix safely.
+@k3.saving.register_keras_serializable(package="parkvision")
+class RandomSensorNoise(layers.Layer):
+    """
+    Additive Gaussian noise with a random strength per image — training only.
+
+    Keras's own ``GaussianNoise`` applies one fixed standard deviation to every
+    image, so a model trained with it never sees a clean input. This draws a
+    fresh strength for each image from ``U(0, max_stddev)`` and applies it to
+    only a ``probability`` share of the batch, so the model learns that grain
+    is not a car while still seeing plenty of clean bays.
+
+    At inference it is the identity. The layer is registered as serialisable so
+    it round-trips through ``.keras`` files; :func:`src.inference.load_model`
+    imports this module before loading for exactly that reason.
+    """
+
+    def __init__(self, max_stddev: float = C.AUG_NOISE_MAX_STDDEV,
+                 probability: float = C.AUG_NOISE_PROBABILITY,
+                 value_range: Tuple[float, float] = (0.0, 255.0),
+                 seed=None, **kwargs):
+        super().__init__(**kwargs)
+        self.max_stddev = float(max_stddev)
+        self.probability = float(probability)
+        self.value_range = (float(value_range[0]), float(value_range[1]))
+        self.seed = seed
+        self.seed_generator = k3.random.SeedGenerator(seed)
+
+    def call(self, inputs, training=None):
+        if not training:
+            return inputs
+        ops = k3.ops
+        batch = ops.shape(inputs)[0]
+        strength = k3.random.uniform(
+            (batch, 1, 1, 1), 0.0, self.max_stddev, seed=self.seed_generator
+        )
+        chosen = k3.random.uniform(
+            (batch, 1, 1, 1), 0.0, 1.0, seed=self.seed_generator
+        ) < self.probability
+        noise = k3.random.normal(ops.shape(inputs), seed=self.seed_generator) * strength
+        noisy = ops.clip(inputs + noise, self.value_range[0], self.value_range[1])
+        return ops.where(chosen, noisy, inputs)
+
+    def compute_output_shape(self, input_shape):
+        return input_shape
+
+    def get_config(self):
+        config = super().get_config()
+        config.update(
+            max_stddev=self.max_stddev,
+            probability=self.probability,
+            value_range=self.value_range,
+            seed=self.seed,
+        )
+        return config
+
+
 def build_augmenter() -> keras.Sequential:
     """
     Training-time augmentation: the rotation, flipping and brightness changes
-    the brief asks for, plus zoom/translation to mimic camera drift and
-    contrast jitter to mimic overcast and rainy days.
+    the brief asks for, plus zoom/translation to mimic camera drift, contrast
+    jitter to mimic overcast and rainy days, and sensor noise to mimic cheap or
+    low-light cameras.
 
     Only horizontal flips are used. A vertical flip would put a car's roof
     where its shadow belongs, which never happens in a fixed overhead camera.
+
+    Noise comes last, after the photometric changes, and is clipped back into
+    [0, 255] so the rescaling layer that follows still receives valid pixels.
     """
     return keras.Sequential(
         [
@@ -49,6 +113,7 @@ def build_augmenter() -> keras.Sequential:
             ),
             layers.RandomContrast(C.AUG_CONTRAST, name="aug_contrast"),
             layers.RandomBrightness(C.AUG_BRIGHTNESS, value_range=(0, 255), name="aug_brightness"),
+            RandomSensorNoise(seed=C.RANDOM_SEED, name="aug_noise"),
         ],
         name="augmentation",
     )

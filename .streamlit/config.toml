@@ -1,9 +1,25 @@
+# Dark "night-time city" theme.
+#
+# Colours are set here rather than overridden in CSS, so every native widget —
+# sliders, tabs, tables, charts, alerts — picks them up consistently. Streamlit's
+# red/green/amber alert palettes are deliberately left at their dark defaults:
+# setting `greenColor` makes Streamlit derive the alert *text* colour by
+# darkening it, which is the wrong direction on a dark background.
 [theme]
-primaryColor = "#1E63A8"
-backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#F3F6FB"
-textColor = "#0F172A"
+base = "dark"
+primaryColor = "#3B82F6"
+backgroundColor = "#0A0F1C"
+secondaryBackgroundColor = "#141D30"
+textColor = "#E6EBF5"
+borderColor = "#243049"
+dataframeHeaderBackgroundColor = "#141D30"
+baseRadius = "0.6rem"
+showSidebarBorder = true
 font = "sans serif"
+
+[theme.sidebar]
+backgroundColor = "#0D1424"
+secondaryBackgroundColor = "#172238"
 
 [server]
 maxUploadSize = 15

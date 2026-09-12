@@ -106,7 +106,7 @@ The brief allows either crop-based classification or full-image detection.
 | Empty bays | Explicitly classified | Invisible — an empty bay has nothing to detect, so absence of a box must be *inferred* |
 | Labels needed | Per-bay occupied/empty (PKLot ships these) | Per-car bounding boxes |
 | Model size | MobileNetV2, 2.3 M parameters, ~9 MB | YOLO, tens of millions of parameters |
-| Runs on free-tier CPU hosting | Yes — ~4 ms per bay | Slow, and a heavy dependency install |
+| Runs on free-tier CPU hosting | Yes — ~10 ms per bay end to end, measured | Slow, and a heavy dependency install |
 | Handles a car straddling two bays | Each bay judged on its own | Ambiguous box-to-bay assignment |
 
 The decisive argument is the third row. Detection finds cars; the question is

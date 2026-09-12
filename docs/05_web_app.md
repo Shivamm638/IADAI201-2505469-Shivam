@@ -97,21 +97,60 @@ what did the system see → what are the numbers → let me dig in*.
 
 ---
 
-## 5.3.1 Theming without `prefers-color-scheme`
+## 5.3.1 The dark theme, and why it is not CSS
 
-The custom cards originally set explicit light backgrounds with a
-`@media (prefers-color-scheme: dark)` override. That is the standard pattern
-and it is wrong here: the media query follows the **operating system**, while
-Streamlit's theme is chosen independently. A user whose OS is dark but whose
-Streamlit renders light — a very common combination, and the one this project
-was developed on — got dark cards with dark text on a white page.
+The palette lives in `.streamlit/config.toml`, not in the stylesheet, so every
+native widget — sliders, tabs, tables, alerts, charts — inherits it instead of
+being overridden one selector at a time:
 
-Every custom surface is therefore built from `rgba(127,127,127,.07)` fills and
-`rgba(127,127,127,.26)` borders, with text left to `color: inherit` and muted
-text expressed as `opacity`. Grey at low alpha darkens a light background and
-lightens a dark one, so the same rules are correct under light, dark and
-custom themes without any detection at all. Fixed colours appear only where the
-app also owns the background — the hero, the congestion banner and the pills.
+```toml
+[theme]
+base = "dark"
+backgroundColor = "#0A0F1C"
+secondaryBackgroundColor = "#141D30"
+textColor = "#E6EBF5"
+primaryColor = "#3B82F6"
+borderColor = "#243049"
+
+[theme.sidebar]
+backgroundColor = "#0D1424"
+```
+
+Streamlit's own red/green/amber alert palettes are deliberately left alone.
+Setting `greenColor` makes Streamlit derive the matching *text* colour by
+darkening it, which is the wrong direction on a dark background and would leave
+`st.success` unreadable.
+
+### Contrast was checked, not eyeballed
+
+The congestion colours in `src/config.py` are 600-weight shades, chosen as solid
+fills behind white text. Measured as *foreground* text on the new background,
+the red reaches only **3.96:1** — below the 4.5:1 WCAG AA minimum for body text,
+and 3.60:1 on a card. So wherever a status colour is the text rather than the
+fill, the app substitutes the brighter 500 weight (red-500 reaches 5.08:1), and
+small labels such as the bay-inspector captions use the 400 weight (6.91:1).
+That substitution is the whole job of `accent_vars()` in `app.py`.
+
+Solid saturated blocks also glare on a dark background, so the congestion banner
+and the status pills became tinted surfaces — a 14%-alpha fill of the status
+colour, a 45%-alpha border, and the colour itself as the heading — instead of
+filled rectangles.
+
+### Why the custom cards still avoid `prefers-color-scheme`
+
+An earlier version set explicit light backgrounds with a
+`@media (prefers-color-scheme: dark)` override. That is the standard pattern and
+it was wrong here: the media query follows the **operating system**, while
+Streamlit's theme is set independently. On the very common combination of a dark
+OS and a light Streamlit theme — the one this project was developed on — every
+card rendered dark text on a dark fill over a white page.
+
+The app's own surfaces are therefore built from `rgba(148,163,184,.06)` fills and
+`rgba(148,163,184,.20)` borders, with text left to `color: inherit` and muted
+text expressed as `opacity`. Grey at low alpha lightens a dark background and
+darkens a light one, so the cards stay correct even if a viewer switches the
+theme from Streamlit's settings menu. Fixed colours appear only where the app
+also owns the background: the hero, the pills and the banner.
 
 ---
 
@@ -167,8 +206,14 @@ a hundred times over and turn a sub-second response into a visible wait.
 - **Colour is never the only signal.** Every count that the colours encode also
   appears as a number in the metric cards and in the bay-by-bay table, so the
   dashboard is usable with colour-vision deficiency.
-- **Dark mode.** The CSS defines a `prefers-color-scheme: dark` block so cards
-  and notes stay readable in either theme.
+- **Contrast.** Every status colour used as text was measured against the dark
+  background; the ones that fell below 4.5:1 were replaced with brighter shades
+  rather than left to look "close enough" (§5.3.1).
+- **Reduced motion.** The pulsing live indicator is disabled under
+  `prefers-reduced-motion: reduce`.
+- **Theme changes.** The app ships dark, but its cards use translucent surfaces
+  and inherited text colour, so switching the theme in Streamlit's settings menu
+  does not break them.
 - **Missing model.** If `models/parkvision_mobilenetv2.keras` is absent the app
   explains which script to run instead of raising a stack trace.
 - **Missing metrics.** The threshold falls back to 0.5 and the sidebar says so,
