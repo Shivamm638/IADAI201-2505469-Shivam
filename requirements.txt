@@ -1,7 +1,7 @@
 # ParkVision AI — runtime dependencies for Streamlit Community Cloud.
 #
 # Versions are pinned to exactly the environment the app was built and tested
-# against, so a deployment behaves like the local run. Two of these pins are
+# against, so a deployment behaves like the local run. Four of these pins are
 # deliberate rather than incidental:
 #
 #   tensorflow-cpu            The deployed app only runs inference. The full
@@ -9,19 +9,41 @@
 #                             will never be used and can push the image past
 #                             Community Cloud's build limits.
 #
+#   tensorflow-cpu >= 2.18    NOT a cosmetic bump. TensorFlow 2.17 requires
+#                             protobuf < 5, while Streamlit >= 1.45 requires
+#                             protobuf >= 5.26.1. Those ranges do not overlap,
+#                             so `tensorflow-cpu==2.17.1` with this Streamlit
+#                             is unsatisfiable and pip fails outright with
+#                             ResolutionImpossible — the app would never have
+#                             built on Community Cloud. A local machine can
+#                             hide this: installing the two packages one at a
+#                             time leaves a working tree and only a warning.
+#                             Always verify a requirements file by resolving it
+#                             from empty, not by checking that the current
+#                             environment happens to run.
+#
 #   opencv-python-headless    The regular `opencv-python` build links against
 #                             GUI libraries that need an X server, which a
 #                             container does not have. Using it is the most
 #                             common cause of `ImportError: libGL.so.1` on
 #                             Streamlit Cloud.
 #
+#   streamlit >= 1.41         `st.image(..., width="stretch")` and
+#                             `st.segmented_control` do not exist before then;
+#                             pinning below a feature the app uses fails only
+#                             in deployment, which is the worst place for it.
+#
 # `keras` is pinned alongside TensorFlow because the saved .keras model must be
-# loaded by a compatible Keras version.
+# loaded by a compatible Keras version, and because the model carries a custom
+# serialised layer (`RandomSensorNoise`).
+#
+# Verified from an empty virtual environment:
+#     python -m venv .venv && .venv/Scripts/python -m pip install -r requirements.txt
 
 streamlit==1.62.0
-tensorflow-cpu==2.17.1
+tensorflow-cpu==2.18.1
 keras==3.15.1
-numpy==1.26.4
+numpy==2.0.2
 opencv-python-headless==4.11.0.86
 pillow==11.3.0
 pandas==2.3.3

@@ -271,6 +271,82 @@ Full write-up: [`docs/03_model_development.md` §3.5.1](docs/03_model_developmen
 
 ---
 
+## 5b · The number that actually holds up: every held-out bay
+
+The 900-crop test above is balanced and capped per scene — the right headline, but
+small. A perfect score on 900 samples only bounds the true accuracy at **99.59%**
+with 95% confidence; at that size, 100% is within reach of luck.
+
+The same fourteen held-out `(lot, date)` groups contain **103,465 bays across
+1,773 photographs**. `scripts/09_full_holdout_eval.py` scores every one of
+them, in the natural 55%-occupied distribution rather than a balanced sample.
+
+| | Sampled test | **Full held-out sweep** |
+|---|---|---|
+| Bays | 900 | **103,465** |
+| Accuracy | 100.00% | **99.77%** |
+| 95% CI | [99.59%, 100.00%] | **[99.735%, 99.794%]** |
+| Errors | 0 | **242** |
+
+The interval narrows from ±0.20 points to ±0.029. That is the point of the
+exercise: not a better number, a number you can stand behind.
+
+It also surfaces what 900 samples could not:
+
+| Slice | Accuracy | n |
+|---|---|---|
+| rainy | 99.40% | 22,129 |
+| sunny | 99.79% | 48,798 |
+| cloudy | 99.98% | 32,538 |
+| UFPR05 | 99.54% | 25,320 |
+| PUCPR | 99.82% | 64,332 |
+| UFPR04 | 99.93% | 13,813 |
+
+**Rain is the weak condition**, not any lot — the sampled test held 157 rainy bays and
+found zero errors; the sweep holds 22,129 and finds
+133.
+Errors also skew toward false *occupied* (160 vs
+82): the system more often hides a free bay than sends a
+driver to a taken one, which is the safer direction.
+
+What the dashboard actually reports survives this intact:
+
+| Scene-level, all 1,773 photographs | |
+|---|---|
+| Congestion level correct | **1,769 / 1,773** (99.8%) |
+| Every bay in the scene correct | 1,643 / 1,773 (92.7%) |
+| Mean free-bay counting error | 0.133 bays |
+| Worst single scene | 34 bays |
+
+That last row is why the sweep was worth running. A 0.13-bay mean hides a tail,
+and the tail is where a user loses trust.
+
+### 99.77% is a floor, not the true accuracy
+
+Inspecting the 242 disagreements changes how they should be read. A seeded random
+sample of 24 — random, because the *most confident* mistakes are self-selecting toward
+label errors by construction — breaks down as:
+
+| | Count | What the crops show |
+|---|---|---|
+| **PKLot's label is wrong** | 9 / 24 | PUCPR rainy bays labelled *empty* that plainly contain a car; UFPR04 bays labelled *occupied* showing bare pavement |
+| **The model is wrong** | 6 / 24 | All UFPR05 in sun — dense tree shadow read as a vehicle, and pedestrians mistaken for one |
+| **Genuinely ambiguous** | 9 / 24 | Deep shadow, or a neighbour's car overhanging the bay line; several within 0.1 of the threshold |
+
+![Random sample of disagreements](results/full_holdout_random_errors.png)
+
+So roughly **a third of the "errors" are dataset errors**, and the true accuracy is higher
+than 99.77%. **No corrected figure is quoted anywhere in this report.** Re-labelling
+ground truth to flatter a model is precisely the habit these checks exist to catch, and a
+number produced that way would not be a measurement. 99.77% is reported as measured,
+with the caveat attached.
+
+The genuine failures are specific and worth naming: **UFPR05 under direct sun**, where
+dense foliage shadow and pedestrians both read as vehicles. That is a real weakness, it is
+documented in the model card, and 900 balanced crops would never have found it.
+
+---
+
 ## 6 · From 100 numbers to one sentence
 
 `src/insights.py` imports **neither TensorFlow nor OpenCV** — the decision rules are pure

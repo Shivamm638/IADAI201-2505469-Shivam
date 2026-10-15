@@ -33,6 +33,21 @@ On 900 bays from **calendar days that appear in no other split**:
 | ROC AUC | 1.0000 |
 | Operating threshold | 0.55 (chosen on validation, applied unchanged to test) |
 
+### Measured again, at 115x the size
+
+The table above is a balanced 900-bay sample. Scored against **every** bay from the same held-out days — 103,465 of them across 1,773 photographs, in their natural distribution:
+
+| Metric | Value |
+|---|---|
+| Accuracy | **99.77%** (95% CI 99.735–99.794%) |
+| Errors | 242 (160 empty called occupied, 82 the reverse) |
+| Congestion level correct | 1,769 / 1,773 scenes |
+| Mean free-bay error | 0.133 bays (worst scene: 34) |
+
+**Treat this as a floor.** A seeded random sample of 24 disagreements found roughly a third to be cases where PKLot's label contradicts the image — bays labelled empty that visibly hold a car. The true accuracy is higher; no corrected figure is quoted, because re-labelling ground truth to improve a score stops it being a measurement.
+
+Weakest slices, from that sweep: rainy 99.40% · sunny 99.79% · cloudy 99.98% · UFPR05 99.54% · PUCPR 99.82% · UFPR04 99.93%
+
 **By weather:** cloudy 100.00% · rainy 100.00% · sunny 100.00%
 
 **By lot:** PUCPR 100.00% · UFPR04 100.00% · UFPR05 100.00%
@@ -46,6 +61,7 @@ Educational and research use, on elevated fixed-camera views of surface parking 
 - **Enforcement or billing.** A perfect score on a 900-bay test does not mean a zero error rate: the same measurement only bounds the true accuracy at 99.59% with 95% confidence, which still permits several wrong calls per thousand bays. Nobody should be charged or fined on that.
 - **Night-time operation.** PKLot contains no true night imagery. The dusk and night rows in the robustness report are simulated by dimming daytime frames, which is not the same as a real low-light sensor.
 - **Heavy sensor noise.** The weakest measured condition is *Sensor noise (σ=30)* at 98.78%; it is set outside the range the model trains on deliberately, as a generalisation check.
+- **UFPR05 in direct sun.** The one weakness the large sweep isolated: dense tree shadow and pedestrians both read as vehicles there. It is the lowest-scoring lot in the full held-out evaluation.
 - **Unsurveyed lots.** Without bay geometry the app falls back to an approximate grid, which it labels as indicative.
 - **Any safety-critical decision.**
 

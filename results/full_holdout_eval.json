@@ -1,0 +1,2462 @@
+{
+  "n_scenes": 1773,
+  "n_bays": 103465,
+  "blank_crops_skipped": 43,
+  "threshold": 0.55,
+  "accuracy": 0.9976610447977577,
+  "accuracy_ci95_wilson": [
+    0.9973476513207764,
+    0.9979374852290839
+  ],
+  "errors": 242,
+  "false_positives_empty_called_occupied": 160,
+  "false_negatives_occupied_called_empty": 82,
+  "confusion_matrix": {
+    "tn": 46465,
+    "fp": 160,
+    "fn": 82,
+    "tp": 56758
+  },
+  "precision_occupied": 0.9971889384728908,
+  "recall_occupied": 0.9985573539760731,
+  "by_lot": {
+    "pucpr": {
+      "accuracy": 0.9981813094571909,
+      "n": 64332
+    },
+    "ufpr04": {
+      "accuracy": 0.9993484398754796,
+      "n": 13813
+    },
+    "ufpr05": {
+      "accuracy": 0.9954186413902054,
+      "n": 25320
+    }
+  },
+  "by_weather": {
+    "sunny": {
+      "accuracy": 0.9979302430427477,
+      "n": 48798
+    },
+    "cloudy": {
+      "accuracy": 0.999754133628373,
+      "n": 32538
+    },
+    "rainy": {
+      "accuracy": 0.9939897871571242,
+      "n": 22129
+    }
+  },
+  "by_true_class": {
+    "occupied": {
+      "accuracy": 0.9985573539760731,
+      "n": 56840
+    },
+    "empty": {
+      "accuracy": 0.9965683646112601,
+      "n": 46625
+    }
+  },
+  "scenes_all_bays_correct": 1643,
+  "congestion_correct": 1769,
+  "mean_free_bay_error": 0.13310772701635645,
+  "max_free_bay_error": 34,
+  "worst_errors": [
+    {
+      "scene": "2013-03-05_11_25_06.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "occupied",
+      "score": 0.0003,
+      "confidence": 0.9997
+    },
+    {
+      "scene": "2013-03-05_11_10_05.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "occupied",
+      "score": 0.0004,
+      "confidence": 0.9996
+    },
+    {
+      "scene": "2013-03-05_11_05_05.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "occupied",
+      "score": 0.0005,
+      "confidence": 0.9995
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 74,
+      "truth": "empty",
+      "score": 0.9994,
+      "confidence": 0.9994
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 28,
+      "truth": "empty",
+      "score": 0.9989,
+      "confidence": 0.9989
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 26,
+      "truth": "empty",
+      "score": 0.9989,
+      "confidence": 0.9989
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 45,
+      "truth": "empty",
+      "score": 0.9985,
+      "confidence": 0.9985
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 60,
+      "truth": "empty",
+      "score": 0.9984,
+      "confidence": 0.9984
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 62,
+      "truth": "empty",
+      "score": 0.998,
+      "confidence": 0.998
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 48,
+      "truth": "empty",
+      "score": 0.9977,
+      "confidence": 0.9977
+    },
+    {
+      "scene": "2012-12-13_20_00_16.jpg",
+      "lot": "ufpr04",
+      "weather": "sunny",
+      "space_id": 21,
+      "truth": "occupied",
+      "score": 0.0024,
+      "confidence": 0.9976
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 48,
+      "truth": "empty",
+      "score": 0.9973,
+      "confidence": 0.9973
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 46,
+      "truth": "empty",
+      "score": 0.997,
+      "confidence": 0.997
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 70,
+      "truth": "empty",
+      "score": 0.9969,
+      "confidence": 0.9969
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 62,
+      "truth": "empty",
+      "score": 0.9968,
+      "confidence": 0.9968
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 70,
+      "truth": "empty",
+      "score": 0.9967,
+      "confidence": 0.9967
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 30,
+      "truth": "empty",
+      "score": 0.9967,
+      "confidence": 0.9967
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 87,
+      "truth": "empty",
+      "score": 0.9965,
+      "confidence": 0.9965
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 60,
+      "truth": "empty",
+      "score": 0.9964,
+      "confidence": 0.9964
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "empty",
+      "score": 0.9963,
+      "confidence": 0.9963
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 20,
+      "truth": "empty",
+      "score": 0.9963,
+      "confidence": 0.9963
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 54,
+      "truth": "empty",
+      "score": 0.9962,
+      "confidence": 0.9962
+    },
+    {
+      "scene": "2013-03-11_12_30_07.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 9,
+      "truth": "occupied",
+      "score": 0.0039,
+      "confidence": 0.9961
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 65,
+      "truth": "empty",
+      "score": 0.9958,
+      "confidence": 0.9958
+    }
+  ],
+  "all_errors": [
+    {
+      "scene": "2012-09-18_13_25_07.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 13,
+      "truth": "empty",
+      "score": 0.9827,
+      "confidence": 0.9827
+    },
+    {
+      "scene": "2012-09-18_07_34_51.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 84,
+      "truth": "empty",
+      "score": 0.95,
+      "confidence": 0.95
+    },
+    {
+      "scene": "2012-09-18_18_10_20.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 95,
+      "truth": "occupied",
+      "score": 0.5403,
+      "confidence": 0.5403
+    },
+    {
+      "scene": "2012-10-09_09_03_45.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 77,
+      "truth": "empty",
+      "score": 0.9403,
+      "confidence": 0.9403
+    },
+    {
+      "scene": "2012-10-09_08_08_43.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 21,
+      "truth": "empty",
+      "score": 0.8636,
+      "confidence": 0.8636
+    },
+    {
+      "scene": "2012-10-09_08_08_43.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 43,
+      "truth": "empty",
+      "score": 0.9853,
+      "confidence": 0.9853
+    },
+    {
+      "scene": "2012-10-09_07_58_42.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 22,
+      "truth": "empty",
+      "score": 0.9434,
+      "confidence": 0.9434
+    },
+    {
+      "scene": "2012-10-09_07_58_42.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 61,
+      "truth": "empty",
+      "score": 0.9432,
+      "confidence": 0.9432
+    },
+    {
+      "scene": "2012-09-12_13_56_24.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 47,
+      "truth": "occupied",
+      "score": 0.3408,
+      "confidence": 0.6592
+    },
+    {
+      "scene": "2012-09-12_15_09_47.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 24,
+      "truth": "empty",
+      "score": 0.6846,
+      "confidence": 0.6846
+    },
+    {
+      "scene": "2012-09-12_16_49_08.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 31,
+      "truth": "empty",
+      "score": 0.8435,
+      "confidence": 0.8435
+    },
+    {
+      "scene": "2012-09-12_12_01_14.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 5,
+      "truth": "empty",
+      "score": 0.9156,
+      "confidence": 0.9156
+    },
+    {
+      "scene": "2012-09-12_14_22_37.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 66,
+      "truth": "occupied",
+      "score": 0.3068,
+      "confidence": 0.6932
+    },
+    {
+      "scene": "2012-09-12_18_12_43.jpg",
+      "lot": "pucpr",
+      "weather": "sunny",
+      "space_id": 92,
+      "truth": "occupied",
+      "score": 0.4084,
+      "confidence": 0.5916
+    },
+    {
+      "scene": "2012-09-12_08_42_04.jpg",
+      "lot": "pucpr",
+      "weather": "cloudy",
+      "space_id": 68,
+      "truth": "occupied",
+      "score": 0.3698,
+      "confidence": 0.6302
+    },
+    {
+      "scene": "2012-09-12_06_57_29.jpg",
+      "lot": "pucpr",
+      "weather": "cloudy",
+      "space_id": 66,
+      "truth": "occupied",
+      "score": 0.1302,
+      "confidence": 0.8698
+    },
+    {
+      "scene": "2012-09-12_08_36_50.jpg",
+      "lot": "pucpr",
+      "weather": "cloudy",
+      "space_id": 68,
+      "truth": "occupied",
+      "score": 0.4568,
+      "confidence": 0.5432
+    },
+    {
+      "scene": "2012-09-12_08_15_53.jpg",
+      "lot": "pucpr",
+      "weather": "cloudy",
+      "space_id": 68,
+      "truth": "occupied",
+      "score": 0.5077,
+      "confidence": 0.5077
+    },
+    {
+      "scene": "2012-09-12_08_00_11.jpg",
+      "lot": "pucpr",
+      "weather": "cloudy",
+      "space_id": 68,
+      "truth": "occupied",
+      "score": 0.3955,
+      "confidence": 0.6045
+    },
+    {
+      "scene": "2012-10-11_07_59_56.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 40,
+      "truth": "empty",
+      "score": 0.6307,
+      "confidence": 0.6307
+    },
+    {
+      "scene": "2012-10-11_11_46_42.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 50,
+      "truth": "empty",
+      "score": 0.7323,
+      "confidence": 0.7323
+    },
+    {
+      "scene": "2012-10-11_16_01_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 32,
+      "truth": "empty",
+      "score": 0.8082,
+      "confidence": 0.8082
+    },
+    {
+      "scene": "2012-10-11_13_51_47.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9829,
+      "confidence": 0.9829
+    },
+    {
+      "scene": "2012-10-11_13_51_47.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 41,
+      "truth": "empty",
+      "score": 0.9839,
+      "confidence": 0.9839
+    },
+    {
+      "scene": "2012-10-11_11_31_41.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 53,
+      "truth": "empty",
+      "score": 0.5599,
+      "confidence": 0.5599
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 5,
+      "truth": "empty",
+      "score": 0.9929,
+      "confidence": 0.9929
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 8,
+      "truth": "empty",
+      "score": 0.9851,
+      "confidence": 0.9851
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "empty",
+      "score": 0.9943,
+      "confidence": 0.9943
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 13,
+      "truth": "empty",
+      "score": 0.9806,
+      "confidence": 0.9806
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 16,
+      "truth": "empty",
+      "score": 0.9859,
+      "confidence": 0.9859
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 17,
+      "truth": "empty",
+      "score": 0.9921,
+      "confidence": 0.9921
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 20,
+      "truth": "empty",
+      "score": 0.9956,
+      "confidence": 0.9956
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 25,
+      "truth": "empty",
+      "score": 0.9885,
+      "confidence": 0.9885
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 30,
+      "truth": "empty",
+      "score": 0.9934,
+      "confidence": 0.9934
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9766,
+      "confidence": 0.9766
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 41,
+      "truth": "empty",
+      "score": 0.991,
+      "confidence": 0.991
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 44,
+      "truth": "empty",
+      "score": 0.9945,
+      "confidence": 0.9945
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 46,
+      "truth": "empty",
+      "score": 0.997,
+      "confidence": 0.997
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 48,
+      "truth": "empty",
+      "score": 0.9973,
+      "confidence": 0.9973
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 50,
+      "truth": "empty",
+      "score": 0.9897,
+      "confidence": 0.9897
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 54,
+      "truth": "empty",
+      "score": 0.9957,
+      "confidence": 0.9957
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 57,
+      "truth": "empty",
+      "score": 0.9947,
+      "confidence": 0.9947
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 59,
+      "truth": "empty",
+      "score": 0.9831,
+      "confidence": 0.9831
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 61,
+      "truth": "empty",
+      "score": 0.946,
+      "confidence": 0.946
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 62,
+      "truth": "empty",
+      "score": 0.9968,
+      "confidence": 0.9968
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 66,
+      "truth": "empty",
+      "score": 0.9802,
+      "confidence": 0.9802
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 70,
+      "truth": "empty",
+      "score": 0.9967,
+      "confidence": 0.9967
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 77,
+      "truth": "empty",
+      "score": 0.9934,
+      "confidence": 0.9934
+    },
+    {
+      "scene": "2012-10-11_15_41_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 87,
+      "truth": "empty",
+      "score": 0.9957,
+      "confidence": 0.9957
+    },
+    {
+      "scene": "2012-10-11_07_57_37.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 84,
+      "truth": "empty",
+      "score": 0.6086,
+      "confidence": 0.6086
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 5,
+      "truth": "empty",
+      "score": 0.993,
+      "confidence": 0.993
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 8,
+      "truth": "empty",
+      "score": 0.9851,
+      "confidence": 0.9851
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "empty",
+      "score": 0.9963,
+      "confidence": 0.9963
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 13,
+      "truth": "empty",
+      "score": 0.9891,
+      "confidence": 0.9891
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 16,
+      "truth": "empty",
+      "score": 0.9841,
+      "confidence": 0.9841
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 17,
+      "truth": "empty",
+      "score": 0.9663,
+      "confidence": 0.9663
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 20,
+      "truth": "empty",
+      "score": 0.9935,
+      "confidence": 0.9935
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 25,
+      "truth": "empty",
+      "score": 0.9932,
+      "confidence": 0.9932
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 26,
+      "truth": "empty",
+      "score": 0.9989,
+      "confidence": 0.9989
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 28,
+      "truth": "empty",
+      "score": 0.9989,
+      "confidence": 0.9989
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 30,
+      "truth": "empty",
+      "score": 0.9933,
+      "confidence": 0.9933
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9853,
+      "confidence": 0.9853
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 41,
+      "truth": "empty",
+      "score": 0.9913,
+      "confidence": 0.9913
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 42,
+      "truth": "empty",
+      "score": 0.9848,
+      "confidence": 0.9848
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 44,
+      "truth": "empty",
+      "score": 0.9942,
+      "confidence": 0.9942
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 45,
+      "truth": "empty",
+      "score": 0.9985,
+      "confidence": 0.9985
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 48,
+      "truth": "empty",
+      "score": 0.9977,
+      "confidence": 0.9977
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 50,
+      "truth": "empty",
+      "score": 0.9919,
+      "confidence": 0.9919
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 54,
+      "truth": "empty",
+      "score": 0.9947,
+      "confidence": 0.9947
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 56,
+      "truth": "empty",
+      "score": 0.9919,
+      "confidence": 0.9919
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 57,
+      "truth": "empty",
+      "score": 0.9922,
+      "confidence": 0.9922
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 58,
+      "truth": "empty",
+      "score": 0.995,
+      "confidence": 0.995
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 59,
+      "truth": "empty",
+      "score": 0.9834,
+      "confidence": 0.9834
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 60,
+      "truth": "empty",
+      "score": 0.9984,
+      "confidence": 0.9984
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 61,
+      "truth": "empty",
+      "score": 0.9654,
+      "confidence": 0.9654
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 62,
+      "truth": "empty",
+      "score": 0.998,
+      "confidence": 0.998
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 65,
+      "truth": "empty",
+      "score": 0.9958,
+      "confidence": 0.9958
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 66,
+      "truth": "empty",
+      "score": 0.9764,
+      "confidence": 0.9764
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 67,
+      "truth": "empty",
+      "score": 0.9951,
+      "confidence": 0.9951
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 70,
+      "truth": "empty",
+      "score": 0.9969,
+      "confidence": 0.9969
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 74,
+      "truth": "empty",
+      "score": 0.9994,
+      "confidence": 0.9994
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 77,
+      "truth": "empty",
+      "score": 0.9928,
+      "confidence": 0.9928
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 86,
+      "truth": "empty",
+      "score": 0.9896,
+      "confidence": 0.9896
+    },
+    {
+      "scene": "2012-10-11_15_51_52.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 91,
+      "truth": "empty",
+      "score": 0.9946,
+      "confidence": 0.9946
+    },
+    {
+      "scene": "2012-10-11_10_21_38.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 67,
+      "truth": "empty",
+      "score": 0.6668,
+      "confidence": 0.6668
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 5,
+      "truth": "empty",
+      "score": 0.995,
+      "confidence": 0.995
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 8,
+      "truth": "empty",
+      "score": 0.9914,
+      "confidence": 0.9914
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "empty",
+      "score": 0.9932,
+      "confidence": 0.9932
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 13,
+      "truth": "empty",
+      "score": 0.9845,
+      "confidence": 0.9845
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 16,
+      "truth": "empty",
+      "score": 0.9857,
+      "confidence": 0.9857
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 17,
+      "truth": "empty",
+      "score": 0.9686,
+      "confidence": 0.9686
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 20,
+      "truth": "empty",
+      "score": 0.9963,
+      "confidence": 0.9963
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 30,
+      "truth": "empty",
+      "score": 0.9967,
+      "confidence": 0.9967
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9814,
+      "confidence": 0.9814
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 41,
+      "truth": "empty",
+      "score": 0.9871,
+      "confidence": 0.9871
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 44,
+      "truth": "empty",
+      "score": 0.9943,
+      "confidence": 0.9943
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 53,
+      "truth": "empty",
+      "score": 0.9794,
+      "confidence": 0.9794
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 54,
+      "truth": "empty",
+      "score": 0.9962,
+      "confidence": 0.9962
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 56,
+      "truth": "empty",
+      "score": 0.9838,
+      "confidence": 0.9838
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 58,
+      "truth": "empty",
+      "score": 0.9914,
+      "confidence": 0.9914
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 59,
+      "truth": "empty",
+      "score": 0.9815,
+      "confidence": 0.9815
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 60,
+      "truth": "empty",
+      "score": 0.9964,
+      "confidence": 0.9964
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 61,
+      "truth": "empty",
+      "score": 0.9725,
+      "confidence": 0.9725
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 63,
+      "truth": "empty",
+      "score": 0.9869,
+      "confidence": 0.9869
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 65,
+      "truth": "empty",
+      "score": 0.9825,
+      "confidence": 0.9825
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 68,
+      "truth": "empty",
+      "score": 0.9958,
+      "confidence": 0.9958
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 70,
+      "truth": "empty",
+      "score": 0.9949,
+      "confidence": 0.9949
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 77,
+      "truth": "empty",
+      "score": 0.9897,
+      "confidence": 0.9897
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 84,
+      "truth": "empty",
+      "score": 0.9856,
+      "confidence": 0.9856
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 86,
+      "truth": "empty",
+      "score": 0.9899,
+      "confidence": 0.9899
+    },
+    {
+      "scene": "2012-10-11_15_46_51.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 87,
+      "truth": "empty",
+      "score": 0.9965,
+      "confidence": 0.9965
+    },
+    {
+      "scene": "2012-10-11_18_16_58.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 21,
+      "truth": "empty",
+      "score": 0.9776,
+      "confidence": 0.9776
+    },
+    {
+      "scene": "2012-10-11_07_57_59.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 16,
+      "truth": "empty",
+      "score": 0.8408,
+      "confidence": 0.8408
+    },
+    {
+      "scene": "2012-10-11_12_11_43.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 53,
+      "truth": "empty",
+      "score": 0.5757,
+      "confidence": 0.5757
+    },
+    {
+      "scene": "2012-10-11_11_51_42.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 2,
+      "truth": "empty",
+      "score": 0.5601,
+      "confidence": 0.5601
+    },
+    {
+      "scene": "2012-10-11_11_51_42.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 50,
+      "truth": "empty",
+      "score": 0.6616,
+      "confidence": 0.6616
+    },
+    {
+      "scene": "2012-10-11_10_16_37.jpg",
+      "lot": "pucpr",
+      "weather": "rainy",
+      "space_id": 67,
+      "truth": "empty",
+      "score": 0.575,
+      "confidence": 0.575
+    },
+    {
+      "scene": "2012-12-13_20_25_17.jpg",
+      "lot": "ufpr04",
+      "weather": "sunny",
+      "space_id": 28,
+      "truth": "empty",
+      "score": 0.7285,
+      "confidence": 0.7285
+    },
+    {
+      "scene": "2012-12-13_20_35_17.jpg",
+      "lot": "ufpr04",
+      "weather": "sunny",
+      "space_id": 28,
+      "truth": "empty",
+      "score": 0.8594,
+      "confidence": 0.8594
+    },
+    {
+      "scene": "2012-12-13_20_00_16.jpg",
+      "lot": "ufpr04",
+      "weather": "sunny",
+      "space_id": 21,
+      "truth": "occupied",
+      "score": 0.0024,
+      "confidence": 0.9976
+    },
+    {
+      "scene": "2012-12-13_18_00_14.jpg",
+      "lot": "ufpr04",
+      "weather": "sunny",
+      "space_id": 9,
+      "truth": "occupied",
+      "score": 0.1336,
+      "confidence": 0.8664
+    },
+    {
+      "scene": "2012-12-13_13_15_09.jpg",
+      "lot": "ufpr04",
+      "weather": "sunny",
+      "space_id": 17,
+      "truth": "occupied",
+      "score": 0.1795,
+      "confidence": 0.8205
+    },
+    {
+      "scene": "2012-12-13_20_30_17.jpg",
+      "lot": "ufpr04",
+      "weather": "sunny",
+      "space_id": 28,
+      "truth": "empty",
+      "score": 0.8005,
+      "confidence": 0.8005
+    },
+    {
+      "scene": "2012-12-13_09_25_04.jpg",
+      "lot": "ufpr04",
+      "weather": "sunny",
+      "space_id": 23,
+      "truth": "occupied",
+      "score": 0.4387,
+      "confidence": 0.5613
+    },
+    {
+      "scene": "2012-12-13_20_20_17.jpg",
+      "lot": "ufpr04",
+      "weather": "sunny",
+      "space_id": 28,
+      "truth": "empty",
+      "score": 0.5641,
+      "confidence": 0.5641
+    },
+    {
+      "scene": "2012-12-13_18_20_15.jpg",
+      "lot": "ufpr04",
+      "weather": "sunny",
+      "space_id": 15,
+      "truth": "occupied",
+      "score": 0.0243,
+      "confidence": 0.9757
+    },
+    {
+      "scene": "2013-03-11_11_45_06.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "empty",
+      "score": 0.598,
+      "confidence": 0.598
+    },
+    {
+      "scene": "2013-03-11_14_50_10.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 8,
+      "truth": "occupied",
+      "score": 0.0373,
+      "confidence": 0.9627
+    },
+    {
+      "scene": "2013-03-11_17_10_13.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 40,
+      "truth": "empty",
+      "score": 0.6365,
+      "confidence": 0.6365
+    },
+    {
+      "scene": "2013-03-11_17_45_13.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 7,
+      "truth": "occupied",
+      "score": 0.2359,
+      "confidence": 0.7641
+    },
+    {
+      "scene": "2013-03-11_16_55_12.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 40,
+      "truth": "empty",
+      "score": 0.6003,
+      "confidence": 0.6003
+    },
+    {
+      "scene": "2013-03-11_13_00_08.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 24,
+      "truth": "occupied",
+      "score": 0.5001,
+      "confidence": 0.5001
+    },
+    {
+      "scene": "2013-03-11_11_30_06.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "empty",
+      "score": 0.5846,
+      "confidence": 0.5846
+    },
+    {
+      "scene": "2013-03-11_17_25_13.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 7,
+      "truth": "occupied",
+      "score": 0.0167,
+      "confidence": 0.9833
+    },
+    {
+      "scene": "2013-03-11_16_50_12.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 40,
+      "truth": "empty",
+      "score": 0.6555,
+      "confidence": 0.6555
+    },
+    {
+      "scene": "2013-03-11_12_30_07.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 9,
+      "truth": "occupied",
+      "score": 0.0039,
+      "confidence": 0.9961
+    },
+    {
+      "scene": "2013-03-11_07_30_01.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 6,
+      "truth": "occupied",
+      "score": 0.2728,
+      "confidence": 0.7272
+    },
+    {
+      "scene": "2013-03-05_11_10_05.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "occupied",
+      "score": 0.0004,
+      "confidence": 0.9996
+    },
+    {
+      "scene": "2013-03-05_11_20_06.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 23,
+      "truth": "occupied",
+      "score": 0.0171,
+      "confidence": 0.9829
+    },
+    {
+      "scene": "2013-03-05_11_25_06.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "occupied",
+      "score": 0.0003,
+      "confidence": 0.9997
+    },
+    {
+      "scene": "2013-03-05_09_50_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 9,
+      "truth": "occupied",
+      "score": 0.0211,
+      "confidence": 0.9789
+    },
+    {
+      "scene": "2013-03-05_11_05_05.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "occupied",
+      "score": 0.0005,
+      "confidence": 0.9995
+    },
+    {
+      "scene": "2013-03-02_09_20_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 32,
+      "truth": "occupied",
+      "score": 0.4016,
+      "confidence": 0.5984
+    },
+    {
+      "scene": "2013-03-02_09_20_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 33,
+      "truth": "occupied",
+      "score": 0.305,
+      "confidence": 0.695
+    },
+    {
+      "scene": "2013-03-02_09_30_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9017,
+      "confidence": 0.9017
+    },
+    {
+      "scene": "2013-03-02_08_10_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 27,
+      "truth": "empty",
+      "score": 0.6105,
+      "confidence": 0.6105
+    },
+    {
+      "scene": "2013-03-02_08_45_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "empty",
+      "score": 0.7506,
+      "confidence": 0.7506
+    },
+    {
+      "scene": "2013-03-02_08_55_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.8702,
+      "confidence": 0.8702
+    },
+    {
+      "scene": "2013-03-02_12_05_07.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.5907,
+      "confidence": 0.5907
+    },
+    {
+      "scene": "2013-03-02_11_45_06.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "occupied",
+      "score": 0.5425,
+      "confidence": 0.5425
+    },
+    {
+      "scene": "2013-03-02_09_55_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.7734,
+      "confidence": 0.7734
+    },
+    {
+      "scene": "2013-03-02_07_50_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 37,
+      "truth": "empty",
+      "score": 0.6431,
+      "confidence": 0.6431
+    },
+    {
+      "scene": "2013-03-02_08_20_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 34,
+      "truth": "empty",
+      "score": 0.6331,
+      "confidence": 0.6331
+    },
+    {
+      "scene": "2013-03-02_08_20_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 35,
+      "truth": "empty",
+      "score": 0.6907,
+      "confidence": 0.6907
+    },
+    {
+      "scene": "2013-03-02_09_10_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 32,
+      "truth": "occupied",
+      "score": 0.4318,
+      "confidence": 0.5682
+    },
+    {
+      "scene": "2013-03-02_09_10_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 37,
+      "truth": "empty",
+      "score": 0.557,
+      "confidence": 0.557
+    },
+    {
+      "scene": "2013-03-02_11_30_06.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "occupied",
+      "score": 0.3639,
+      "confidence": 0.6361
+    },
+    {
+      "scene": "2013-03-02_10_55_05.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "occupied",
+      "score": 0.5389,
+      "confidence": 0.5389
+    },
+    {
+      "scene": "2013-03-02_10_00_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.7353,
+      "confidence": 0.7353
+    },
+    {
+      "scene": "2013-03-02_09_00_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 22,
+      "truth": "empty",
+      "score": 0.7266,
+      "confidence": 0.7266
+    },
+    {
+      "scene": "2013-03-02_09_00_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9662,
+      "confidence": 0.9662
+    },
+    {
+      "scene": "2013-03-02_07_40_01.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 29,
+      "truth": "empty",
+      "score": 0.6714,
+      "confidence": 0.6714
+    },
+    {
+      "scene": "2013-03-02_09_45_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.946,
+      "confidence": 0.946
+    },
+    {
+      "scene": "2013-03-02_08_30_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 32,
+      "truth": "empty",
+      "score": 0.5543,
+      "confidence": 0.5543
+    },
+    {
+      "scene": "2013-03-02_08_30_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9748,
+      "confidence": 0.9748
+    },
+    {
+      "scene": "2013-03-02_09_40_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9492,
+      "confidence": 0.9492
+    },
+    {
+      "scene": "2013-03-02_08_35_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 19,
+      "truth": "empty",
+      "score": 0.5936,
+      "confidence": 0.5936
+    },
+    {
+      "scene": "2013-03-02_08_35_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "empty",
+      "score": 0.8894,
+      "confidence": 0.8894
+    },
+    {
+      "scene": "2013-03-02_08_35_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "empty",
+      "score": 0.6506,
+      "confidence": 0.6506
+    },
+    {
+      "scene": "2013-03-02_08_35_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9256,
+      "confidence": 0.9256
+    },
+    {
+      "scene": "2013-03-02_11_25_06.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "occupied",
+      "score": 0.4322,
+      "confidence": 0.5678
+    },
+    {
+      "scene": "2013-03-02_09_05_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 33,
+      "truth": "empty",
+      "score": 0.924,
+      "confidence": 0.924
+    },
+    {
+      "scene": "2013-03-02_09_15_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 32,
+      "truth": "occupied",
+      "score": 0.3741,
+      "confidence": 0.6259
+    },
+    {
+      "scene": "2013-03-02_09_15_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 33,
+      "truth": "occupied",
+      "score": 0.1993,
+      "confidence": 0.8007
+    },
+    {
+      "scene": "2013-03-02_09_15_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.5549,
+      "confidence": 0.5549
+    },
+    {
+      "scene": "2013-03-02_09_50_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "empty",
+      "score": 0.7916,
+      "confidence": 0.7916
+    },
+    {
+      "scene": "2013-03-02_09_50_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.8614,
+      "confidence": 0.8614
+    },
+    {
+      "scene": "2013-03-02_08_25_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 21,
+      "truth": "empty",
+      "score": 0.8939,
+      "confidence": 0.8939
+    },
+    {
+      "scene": "2013-03-02_08_25_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 35,
+      "truth": "empty",
+      "score": 0.6781,
+      "confidence": 0.6781
+    },
+    {
+      "scene": "2013-03-02_11_15_06.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "occupied",
+      "score": 0.3977,
+      "confidence": 0.6023
+    },
+    {
+      "scene": "2013-03-02_11_40_06.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "occupied",
+      "score": 0.4357,
+      "confidence": 0.5643
+    },
+    {
+      "scene": "2013-03-02_09_25_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 32,
+      "truth": "occupied",
+      "score": 0.407,
+      "confidence": 0.593
+    },
+    {
+      "scene": "2013-03-02_09_25_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.931,
+      "confidence": 0.931
+    },
+    {
+      "scene": "2013-03-02_08_50_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 19,
+      "truth": "empty",
+      "score": 0.9613,
+      "confidence": 0.9613
+    },
+    {
+      "scene": "2013-03-02_08_50_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "empty",
+      "score": 0.7974,
+      "confidence": 0.7974
+    },
+    {
+      "scene": "2013-03-02_08_50_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.7588,
+      "confidence": 0.7588
+    },
+    {
+      "scene": "2013-03-02_11_05_05.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "occupied",
+      "score": 0.3218,
+      "confidence": 0.6782
+    },
+    {
+      "scene": "2013-03-02_09_35_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "empty",
+      "score": 0.5865,
+      "confidence": 0.5865
+    },
+    {
+      "scene": "2013-03-02_09_35_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9845,
+      "confidence": 0.9845
+    },
+    {
+      "scene": "2013-03-02_08_15_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 25,
+      "truth": "empty",
+      "score": 0.5507,
+      "confidence": 0.5507
+    },
+    {
+      "scene": "2013-03-02_08_15_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 35,
+      "truth": "empty",
+      "score": 0.56,
+      "confidence": 0.56
+    },
+    {
+      "scene": "2013-03-02_08_15_02.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.6545,
+      "confidence": 0.6545
+    },
+    {
+      "scene": "2013-03-02_08_40_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 20,
+      "truth": "empty",
+      "score": 0.5578,
+      "confidence": 0.5578
+    },
+    {
+      "scene": "2013-03-02_08_40_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.9401,
+      "confidence": 0.9401
+    },
+    {
+      "scene": "2013-03-02_07_30_01.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 39,
+      "truth": "empty",
+      "score": 0.5555,
+      "confidence": 0.5555
+    },
+    {
+      "scene": "2013-04-16_09_20_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 3,
+      "truth": "occupied",
+      "score": 0.3425,
+      "confidence": 0.6575
+    },
+    {
+      "scene": "2013-04-16_09_30_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 3,
+      "truth": "occupied",
+      "score": 0.4625,
+      "confidence": 0.5375
+    },
+    {
+      "scene": "2013-04-16_09_45_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 3,
+      "truth": "occupied",
+      "score": 0.2424,
+      "confidence": 0.7576
+    },
+    {
+      "scene": "2013-04-16_10_15_04.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 3,
+      "truth": "occupied",
+      "score": 0.5453,
+      "confidence": 0.5453
+    },
+    {
+      "scene": "2013-04-16_09_05_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 38,
+      "truth": "occupied",
+      "score": 0.534,
+      "confidence": 0.534
+    },
+    {
+      "scene": "2013-04-16_09_15_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 3,
+      "truth": "occupied",
+      "score": 0.5395,
+      "confidence": 0.5395
+    },
+    {
+      "scene": "2013-04-16_09_15_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 18,
+      "truth": "occupied",
+      "score": 0.3256,
+      "confidence": 0.6744
+    },
+    {
+      "scene": "2013-04-16_10_35_05.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 3,
+      "truth": "occupied",
+      "score": 0.4508,
+      "confidence": 0.5492
+    },
+    {
+      "scene": "2013-04-16_09_25_03.jpg",
+      "lot": "ufpr05",
+      "weather": "sunny",
+      "space_id": 3,
+      "truth": "occupied",
+      "score": 0.363,
+      "confidence": 0.637
+    },
+    {
+      "scene": "2013-03-05_12_55_07.jpg",
+      "lot": "ufpr05",
+      "weather": "cloudy",
+      "space_id": 35,
+      "truth": "empty",
+      "score": 0.8189,
+      "confidence": 0.8189
+    },
+    {
+      "scene": "2013-03-13_14_15_09.jpg",
+      "lot": "ufpr05",
+      "weather": "cloudy",
+      "space_id": 12,
+      "truth": "empty",
+      "score": 0.9687,
+      "confidence": 0.9687
+    },
+    {
+      "scene": "2013-03-13_07_10_01.jpg",
+      "lot": "ufpr05",
+      "weather": "cloudy",
+      "space_id": 40,
+      "truth": "empty",
+      "score": 0.9889,
+      "confidence": 0.9889
+    },
+    {
+      "scene": "2013-03-13_17_50_13.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.5035,
+      "confidence": 0.5035
+    },
+    {
+      "scene": "2013-03-13_17_05_12.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 9,
+      "truth": "occupied",
+      "score": 0.4594,
+      "confidence": 0.5406
+    },
+    {
+      "scene": "2013-03-13_17_05_12.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.5419,
+      "confidence": 0.5419
+    },
+    {
+      "scene": "2013-03-13_17_15_13.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.2042,
+      "confidence": 0.7958
+    },
+    {
+      "scene": "2013-03-13_17_40_13.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.119,
+      "confidence": 0.881
+    },
+    {
+      "scene": "2013-03-13_18_20_14.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.3794,
+      "confidence": 0.6206
+    },
+    {
+      "scene": "2013-03-13_16_25_12.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.375,
+      "confidence": 0.625
+    },
+    {
+      "scene": "2013-03-13_17_35_13.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.2258,
+      "confidence": 0.7742
+    },
+    {
+      "scene": "2013-03-13_15_45_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 9,
+      "truth": "occupied",
+      "score": 0.5238,
+      "confidence": 0.5238
+    },
+    {
+      "scene": "2013-03-13_15_45_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.3745,
+      "confidence": 0.6255
+    },
+    {
+      "scene": "2013-03-13_16_05_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 1,
+      "truth": "occupied",
+      "score": 0.1037,
+      "confidence": 0.8963
+    },
+    {
+      "scene": "2013-03-13_16_05_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.2632,
+      "confidence": 0.7368
+    },
+    {
+      "scene": "2013-03-13_16_50_12.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.454,
+      "confidence": 0.546
+    },
+    {
+      "scene": "2013-03-13_18_00_14.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.2473,
+      "confidence": 0.7527
+    },
+    {
+      "scene": "2013-03-13_18_10_14.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.5355,
+      "confidence": 0.5355
+    },
+    {
+      "scene": "2013-03-13_16_15_12.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 9,
+      "truth": "occupied",
+      "score": 0.4692,
+      "confidence": 0.5308
+    },
+    {
+      "scene": "2013-03-13_16_15_12.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.4494,
+      "confidence": 0.5506
+    },
+    {
+      "scene": "2013-03-13_17_25_13.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.3915,
+      "confidence": 0.6085
+    },
+    {
+      "scene": "2013-03-13_15_55_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.4374,
+      "confidence": 0.5626
+    },
+    {
+      "scene": "2013-03-13_17_20_13.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.0353,
+      "confidence": 0.9647
+    },
+    {
+      "scene": "2013-03-13_16_10_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 1,
+      "truth": "occupied",
+      "score": 0.093,
+      "confidence": 0.907
+    },
+    {
+      "scene": "2013-03-13_16_10_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.4205,
+      "confidence": 0.5795
+    },
+    {
+      "scene": "2013-03-13_15_50_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 9,
+      "truth": "occupied",
+      "score": 0.2246,
+      "confidence": 0.7754
+    },
+    {
+      "scene": "2013-03-13_15_50_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.2311,
+      "confidence": 0.7689
+    },
+    {
+      "scene": "2013-03-13_18_15_14.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.2973,
+      "confidence": 0.7027
+    },
+    {
+      "scene": "2013-03-13_17_30_13.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.4422,
+      "confidence": 0.5578
+    },
+    {
+      "scene": "2013-03-13_15_15_10.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 20,
+      "truth": "occupied",
+      "score": 0.084,
+      "confidence": 0.916
+    },
+    {
+      "scene": "2013-03-13_16_20_12.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.2171,
+      "confidence": 0.7829
+    },
+    {
+      "scene": "2013-03-13_17_10_13.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.035,
+      "confidence": 0.965
+    },
+    {
+      "scene": "2013-03-13_15_35_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.3519,
+      "confidence": 0.6481
+    },
+    {
+      "scene": "2013-03-13_17_45_13.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.2305,
+      "confidence": 0.7695
+    },
+    {
+      "scene": "2013-03-13_15_25_11.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.1745,
+      "confidence": 0.8255
+    },
+    {
+      "scene": "2013-03-13_17_55_13.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.4286,
+      "confidence": 0.5714
+    },
+    {
+      "scene": "2013-03-13_17_00_12.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 1,
+      "truth": "occupied",
+      "score": 0.1058,
+      "confidence": 0.8942
+    },
+    {
+      "scene": "2013-03-13_17_00_12.jpg",
+      "lot": "ufpr05",
+      "weather": "rainy",
+      "space_id": 10,
+      "truth": "occupied",
+      "score": 0.2261,
+      "confidence": 0.7739
+    }
+  ]
+}

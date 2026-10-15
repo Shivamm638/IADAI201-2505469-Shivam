@@ -32,12 +32,12 @@ pipeline stays fully reproducible without bloating the clone.
 
 ```
 streamlit==1.62.0
-tensorflow-cpu==2.17.1
+tensorflow-cpu==2.18.1
 keras==3.15.1
-numpy==1.26.4
+numpy==2.0.2
 opencv-python-headless==4.11.0.86
 pillow==11.3.0
-pandas==2.2.3
+pandas==2.3.3
 ```
 
 Every version is pinned to exactly the environment the app was built and tested
@@ -47,6 +47,37 @@ against. Four of those pins are deliberate rather than incidental:
 The full package pulls in CUDA libraries that will never be used and can push
 the image past Community Cloud's build limits; the CPU wheel is roughly a third
 of the size and starts faster.
+
+**`tensorflow-cpu` at 2.18, not 2.17 — and this one was a real bug.** The file
+previously pinned `tensorflow-cpu==2.17.1` alongside `streamlit==1.62.0`. Those
+two cannot coexist: TensorFlow 2.17 requires `protobuf < 5.0.0dev`, Streamlit
+1.62 requires `protobuf >= 5.26.1`, and the ranges do not overlap. `pip install
+-r requirements.txt` fails outright with `ResolutionImpossible`, which means
+**the app would never have built on Streamlit Cloud.**
+
+It passed unnoticed locally because the development machine had accumulated the
+two packages over separate installs. Installing them one at a time leaves a
+working tree and only a warning; it is only resolving the file *as a set* that
+surfaces the contradiction. The lesson is in the verification, not the pin:
+
+```bash
+python -m venv .venv
+.venv/Scripts/python -m pip install -r requirements.txt   # must succeed from empty
+```
+
+A requirements file is only verified when it resolves from an empty
+environment. "My machine runs it" is not the same claim.
+
+Moving to 2.18.1 was checked rather than assumed: the saved model loads with its
+custom `RandomSensorNoise` layer intact, all 46 tests pass, and
+`scripts/03_evaluate.py` reproduces the metrics exactly — 100.00% accuracy at
+threshold 0.55, with identical per-lot and per-weather breakdowns. NumPy also
+moves to 2.0.2, which TensorFlow 2.18 supports and 2.17 does not.
+
+**`streamlit` at 1.62, not 1.40.** `st.image(..., width="stretch")` and
+`st.segmented_control` do not exist before 1.41; on an older pin the app raises
+`TypeError` on its first render. Pinning below a feature you use is worse than
+not pinning at all, because it fails only in deployment.
 
 **`opencv-python-headless`, not `opencv-python`.** The headless build omits the
 GUI bindings, which need an X server that a container does not have. Using the

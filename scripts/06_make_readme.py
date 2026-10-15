@@ -39,6 +39,7 @@ def main() -> None:
     training = load(C.RESULTS_DIR / "training_summary.json")
     robust = load(C.RESULTS_DIR / "robustness.json")
     comparison = load(C.RESULTS_DIR / "model_comparison.json")
+    full_eval = load(C.RESULTS_DIR / "full_holdout_eval.json")
 
     # Counted, not typed: the README said "38 tests" for three commits after the
     # suite reached 46.
@@ -386,6 +387,87 @@ Full write-up: [`docs/03_model_development.md` §3.5.1](docs/03_model_developmen
 """)
 
     # ================================================================== logic
+    if full_eval:
+        fe = full_eval
+        lo, hi = fe["accuracy_ci95_wilson"]
+        A(f"""---
+
+## 5b · The number that actually holds up: every held-out bay
+
+The 900-crop test above is balanced and capped per scene — the right headline, but
+small. A perfect score on 900 samples only bounds the true accuracy at **{ci[0] * 100:.2f}%**
+with 95% confidence; at that size, 100% is within reach of luck.
+
+The same fourteen held-out `(lot, date)` groups contain **{fe['n_bays']:,} bays across
+{fe['n_scenes']:,} photographs**. `scripts/09_full_holdout_eval.py` scores every one of
+them, in the natural {100 * fe['confusion_matrix']['tp'] / fe['n_bays'] + 100 * fe['confusion_matrix']['fn'] / fe['n_bays']:.0f}%-occupied distribution rather than a balanced sample.
+
+| | Sampled test | **Full held-out sweep** |
+|---|---|---|
+| Bays | {test.get('n_samples', 0):,} | **{fe['n_bays']:,}** |
+| Accuracy | {pct(test.get('accuracy'))} | **{pct(fe['accuracy'])}** |
+| 95% CI | [{ci[0] * 100:.2f}%, {ci[1] * 100:.2f}%] | **[{lo * 100:.3f}%, {hi * 100:.3f}%]** |
+| Errors | {test.get('errors', 0)} | **{fe['errors']}** |
+
+The interval narrows from ±{(ci[1] - ci[0]) * 50:.2f} points to ±{(hi - lo) * 50:.3f}. That is the point of the
+exercise: not a better number, a number you can stand behind.
+
+It also surfaces what {test.get('n_samples', 0):,} samples could not:
+
+| Slice | Accuracy | n |
+|---|---|---|""")
+        for key, row in sorted(fe["by_weather"].items(),
+                               key=lambda kv: kv[1]["accuracy"]):
+            A(f"| {key} | {pct(row['accuracy'])} | {row['n']:,} |")
+        for key, row in sorted(fe["by_lot"].items(),
+                               key=lambda kv: kv[1]["accuracy"]):
+            A(f"| {key.upper()} | {pct(row['accuracy'])} | {row['n']:,} |")
+
+        A(f"""
+**Rain is the weak condition**, not any lot — the sampled test held 157 rainy bays and
+found zero errors; the sweep holds {fe['by_weather'].get('rainy', {}).get('n', 0):,} and finds
+{round((1 - fe['by_weather'].get('rainy', {}).get('accuracy', 1)) * fe['by_weather'].get('rainy', {}).get('n', 0))}.
+Errors also skew toward false *occupied* ({fe['false_positives_empty_called_occupied']} vs
+{fe['false_negatives_occupied_called_empty']}): the system more often hides a free bay than sends a
+driver to a taken one, which is the safer direction.
+
+What the dashboard actually reports survives this intact:
+
+| Scene-level, all {fe['n_scenes']:,} photographs | |
+|---|---|
+| Congestion level correct | **{fe['congestion_correct']:,} / {fe['n_scenes']:,}** ({100 * fe['congestion_correct'] / fe['n_scenes']:.1f}%) |
+| Every bay in the scene correct | {fe['scenes_all_bays_correct']:,} / {fe['n_scenes']:,} ({100 * fe['scenes_all_bays_correct'] / fe['n_scenes']:.1f}%) |
+| Mean free-bay counting error | {fe['mean_free_bay_error']:.3f} bays |
+| Worst single scene | {fe['max_free_bay_error']} bays |
+
+That last row is why the sweep was worth running. A {fe['mean_free_bay_error']:.2f}-bay mean hides a tail,
+and the tail is where a user loses trust.
+
+### {pct(fe['accuracy'])} is a floor, not the true accuracy
+
+Inspecting the {fe['errors']} disagreements changes how they should be read. A seeded random
+sample of 24 — random, because the *most confident* mistakes are self-selecting toward
+label errors by construction — breaks down as:
+
+| | Count | What the crops show |
+|---|---|---|
+| **PKLot's label is wrong** | 9 / 24 | PUCPR rainy bays labelled *empty* that plainly contain a car; UFPR04 bays labelled *occupied* showing bare pavement |
+| **The model is wrong** | 6 / 24 | All UFPR05 in sun — dense tree shadow read as a vehicle, and pedestrians mistaken for one |
+| **Genuinely ambiguous** | 9 / 24 | Deep shadow, or a neighbour's car overhanging the bay line; several within 0.1 of the threshold |
+
+![Random sample of disagreements](results/full_holdout_random_errors.png)
+
+So roughly **a third of the "errors" are dataset errors**, and the true accuracy is higher
+than {pct(fe['accuracy'])}. **No corrected figure is quoted anywhere in this report.** Re-labelling
+ground truth to flatter a model is precisely the habit these checks exist to catch, and a
+number produced that way would not be a measurement. {pct(fe['accuracy'])} is reported as measured,
+with the caveat attached.
+
+The genuine failures are specific and worth naming: **UFPR05 under direct sun**, where
+dense foliage shadow and pedestrians both read as vehicles. That is a real weakness, it is
+documented in the model card, and {test.get('n_samples', 0):,} balanced crops would never have found it.
+""")
+
     A(f"""---
 
 ## 6 · From 100 numbers to one sentence
@@ -717,10 +799,11 @@ CRS Artificial Intelligence — Machine Learning and Deep Learning · Summative 
     print(f"wrote {OUT}  ({len(OUT.read_text(encoding='utf-8').splitlines())} lines, "
           f"{OUT.stat().st_size / 1024:.1f} KB)")
 
-    write_model_card(metrics, dataset, training, robust)
+    write_model_card(metrics, dataset, training, robust, full_eval)
 
 
-def write_model_card(metrics: dict, dataset: dict, training: dict, robust: dict) -> None:
+def write_model_card(metrics: dict, dataset: dict, training: dict, robust: dict,
+                     full_eval: dict | None = None) -> None:
     """A short, honest description of the shipped model, next to the weights."""
     test = metrics.get("test", {})
     stress = robust.get("stress_test", [])
@@ -780,6 +863,39 @@ def write_model_card(metrics: dict, dataset: dict, training: dict, robust: dict)
         "",
     ]
 
+    if full_eval:
+        lo, hi = full_eval["accuracy_ci95_wilson"]
+        lines += [
+            "### Measured again, at 115x the size",
+            "",
+            f"The table above is a balanced {full_eval and metrics.get('test', {}).get('n_samples', 0):,}-bay sample. Scored against "
+            f"**every** bay from the same held-out days — {full_eval['n_bays']:,} of them across "
+            f"{full_eval['n_scenes']:,} photographs, in their natural distribution:",
+            "",
+            "| Metric | Value |",
+            "|---|---|",
+            f"| Accuracy | **{pct(full_eval['accuracy'])}** (95% CI {lo * 100:.3f}–{hi * 100:.3f}%) |",
+            f"| Errors | {full_eval['errors']} "
+            f"({full_eval['false_positives_empty_called_occupied']} empty called occupied, "
+            f"{full_eval['false_negatives_occupied_called_empty']} the reverse) |",
+            f"| Congestion level correct | {full_eval['congestion_correct']:,} / {full_eval['n_scenes']:,} scenes |",
+            f"| Mean free-bay error | {full_eval['mean_free_bay_error']:.3f} bays (worst scene: {full_eval['max_free_bay_error']}) |",
+            "",
+            "**Treat this as a floor.** A seeded random sample of 24 disagreements found "
+            "roughly a third to be cases where PKLot's label contradicts the image — bays "
+            "labelled empty that visibly hold a car. The true accuracy is higher; no "
+            "corrected figure is quoted, because re-labelling ground truth to improve a "
+            "score stops it being a measurement.",
+            "",
+            "Weakest slices, from that sweep: "
+            + " · ".join(f"{k} {pct(v['accuracy'])}" for k, v in
+                         sorted(full_eval["by_weather"].items(), key=lambda kv: kv[1]["accuracy"]))
+            + " · "
+            + " · ".join(f"{k.upper()} {pct(v['accuracy'])}" for k, v in
+                         sorted(full_eval["by_lot"].items(), key=lambda kv: kv[1]["accuracy"])),
+            "",
+        ]
+
     if metrics.get("by_weather"):
         lines += ["**By weather:** " + " · ".join(
             f"{k} {pct(v['accuracy'])}" for k, v in metrics["by_weather"].items()), ""]
@@ -807,6 +923,9 @@ def write_model_card(metrics: dict, dataset: dict, training: dict, robust: dict)
          f"*{worst['condition']}* at {pct(worst['accuracy'])}; it is set outside "
          "the range the model trains on deliberately, as a generalisation check."
          if worst else ""),
+        "- **UFPR05 in direct sun.** The one weakness the large sweep isolated: "
+        "dense tree shadow and pedestrians both read as vehicles there. It is the "
+        "lowest-scoring lot in the full held-out evaluation.",
         "- **Unsurveyed lots.** Without bay geometry the app falls back to an "
         "approximate grid, which it labels as indicative.",
         "- **Any safety-critical decision.**",

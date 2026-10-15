@@ -12,6 +12,7 @@ from __future__ import annotations
 
 import json
 import re
+import os
 import sys
 from pathlib import Path
 
@@ -62,6 +63,66 @@ def check_code():
               f"{executed}/{total} code cells have stored output", warn_only=True)
 
     file_check("test suite", C.PROJECT_ROOT / "tests" / "test_parkvision.py")
+
+
+def check_requirements_resolve():
+    """
+    Resolve requirements.txt from empty, rather than trusting this machine.
+
+    requirements.txt once pinned tensorflow-cpu==2.17.1 beside
+    streamlit==1.62.0. Those two have contradictory protobuf ranges, so
+    `pip install -r requirements.txt` fails with ResolutionImpossible and the
+    app could never have built on Streamlit Cloud — but the development machine
+    ran fine, because the packages had been installed separately over time.
+    Only resolving the file as a set catches that, so it is checked here rather
+    than assumed.
+    """
+    import subprocess
+
+    print()
+    print("— Dependency resolution —")
+    requirements = C.PROJECT_ROOT / "requirements.txt"
+    if not requirements.exists():
+        check("requirements.txt resolves", False, "file missing")
+        return
+
+    try:
+        result = subprocess.run(
+            [sys.executable, "-m", "pip", "install", "--dry-run", "--quiet",
+             "--report", os.devnull, "-r", str(requirements)],
+            capture_output=True, text=True, timeout=600,
+        )
+    except FileNotFoundError:
+        check("requirements.txt resolves", True, "pip unavailable — skipped",
+              warn_only=True)
+        return
+    except subprocess.TimeoutExpired:
+        check("requirements.txt resolves", True, "resolver timed out — skipped",
+              warn_only=True)
+        return
+
+    output = (result.stdout + result.stderr)
+    if result.returncode == 0:
+        check("requirements.txt resolves from empty", True)
+        return
+
+    offline = any(marker in output for marker in (
+        "Temporary failure in name resolution", "Network is unreachable",
+        "Failed to establish a new connection", "ProxyError",
+        "Read timed out", "ConnectionError",
+    ))
+    if offline:
+        check("requirements.txt resolves from empty", True,
+              "no network — skipped", warn_only=True)
+        return
+
+    conflict = ""
+    for line in output.splitlines():
+        if "conflict is caused by" in line or "depends on" in line:
+            conflict = line.strip()[:90]
+            break
+    check("requirements.txt resolves from empty", False,
+          conflict or "pip could not resolve the pins")
 
 
 def check_dataset():
@@ -203,6 +264,7 @@ def main() -> int:
     print("=" * 74)
 
     check_code()
+    check_requirements_resolve()
     check_dataset()
     check_model()
     check_results()
