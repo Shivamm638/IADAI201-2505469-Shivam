@@ -1,14 +1,11 @@
 {
   "_instructions": "Fill in the five FILL_IN fields below, then run: python scripts/05_make_submission.py",
-
   "student_full_name": "FILL_IN — your full name",
   "candidate_registration_number": "FILL_IN — your candidate registration number",
   "school_name": "FILL_IN — your school name",
-
-  "github_username": "FILL_IN — your GitHub username",
-  "github_repository": "FILL_IN — e.g. IADAI201-1000000-YourName",
+  "github_username": "Shivamm638",
+  "github_repository": "ParkVision-AI",
   "streamlit_app_url": "FILL_IN — e.g. https://parkvision-ai.streamlit.app",
-
   "crs_name": "Artificial Intelligence",
   "course_name": "Machine Learning and Deep Learning",
   "assessment_type": "Summative Assessment (Individual)",
