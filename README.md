@@ -5,7 +5,7 @@
 > **Scenario 1** · CRS Artificial Intelligence — Machine Learning and Deep Learning
 > Summative Assessment · *AI in Action: Building Intelligent Vision Systems for Smart Cities & Smart Retail*
 
-**Live app → https://<your-app>.streamlit.app**
+**Live app → https://parkvision-ai.streamlit.app/
 
 A computer-vision system for **UrbanFlow AI Pvt. Ltd.** that looks at a photograph of a
 parking lot and answers the question a driver actually has: *how many bays are free, where
