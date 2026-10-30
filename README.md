@@ -1,5 +1,7 @@
 # 🅿️ ParkVision AI — Intelligent Urban Parking Analytics & Space Optimisation Platform
 
+> **CRS submission status:** The project code, trained model, processed dataset, evaluation evidence and demo screenshots are committed. The public Streamlit deployment URL and candidate details still need to be filled in before final submission. See [SUBMISSION_CHECKLIST.md](SUBMISSION_CHECKLIST.md) for the remaining steps.
+
 > **Scenario 1** · CRS Artificial Intelligence — Machine Learning and Deep Learning
 > Summative Assessment · *AI in Action: Building Intelligent Vision Systems for Smart Cities & Smart Retail*
 
